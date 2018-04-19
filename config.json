@@ -1,0 +1,27 @@
+{
+	"Services": {
+		"Auth": {
+			"url": "http://localhost:",
+			"port": 8550,
+			"base": "/api/auth"
+		},
+		"Social": {
+			"url": "http://localhost:",
+			"port": 8551,
+			"base": "/api/social"
+		},
+		"Market": {
+			"url": "http://localhost:",
+			"port": 8552,
+			"base": "/api/market"
+		},
+		"Platform": {
+			"url": "http://localhost:",
+			"port": 8553,
+			"base": "/api/platform"
+		}
+	},
+	"NoAuthCheckUrl": [
+	"/auth/*"
+	]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "mountainpier",
+  "version": "0.1.0",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "bunyan": "^1.8.12",
+    "bunyan-mongodb": "^1.0.2",
+    "mongodb": "^2.2.33",
+    "node-restify-validation": "^1.1.1",
+    "redis": "^2.8.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "restify": "^6.3.4",
+    "typemoq": "^2.1.0",
+    "validator": "^9.4.1"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.44",
+    "@types/mongodb": "^2.2.16",
+    "@types/node": "^8.0.53",
+    "@types/request-promise": "^4.1.39",
+    "@types/restify": "^5.0.6",
+    "mocha": "^4.0.1",
+    "nyc": "^11.4.0",
+    "proxyquire": "^1.8.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.2"
+  },
+  "description": "Electronics Devices Design web service",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./node_modules/typescript/bin/tsc",
+    "devel": "node app",
+    "start": "node index",
+    "test": "node ./node_modules/mocha/bin/mocha --recursive test/controller",
+    "integration": "node ./node_modules/mocha/bin/mocha --recursive test",
+    "coverage": "node ./node_modules/nyc/bin/nyc ./node_modules/mocha/bin/mocha --recursive test/controller"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewpoletin/mountainpier-api.git"
+  },
+  "author": "Matthew Poletin <contact@matthewpoletin.ru> (http://matthewpoletin.ru/mountainpier)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matthewpoletin/mountainpier-api/issues"
+  },
+  "homepage": "https://github.com/matthewpoletin/mountainpier-api#readme"
+}
