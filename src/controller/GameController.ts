@@ -9,6 +9,7 @@ import GameService from "../backend/market/GameService";
 import IGameRequest from "../backend/market/interface/IGameRequest";
 import IGameResponse from "../backend/market/interface/IGameResponse";
 import IGamePaginated from "../backend/market/interface/IGameResponse";
+import {IUserPaginated} from "../backend/social/interface/IUserResponse";
 
 export default class GameController extends AbstractController {
 
@@ -32,7 +33,6 @@ export default class GameController extends AbstractController {
 
     public static async createGame(req: restify.Request, res: restify.Response, next: restify.Next) {
         const gameRequest: IGameRequest = req.body;
-        // TODO: check if game with such name exists
         try {
             const gameResponse: IGameResponse = await GameService.createGame(gameRequest);
             res.json(201, gameResponse);
@@ -43,7 +43,6 @@ export default class GameController extends AbstractController {
     }
 
     public static async getGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
-        // const gameId = parseInt(req.params.gameId, 10);
         const gameId: string = req.params.gameId;
         try {
             const gameResponse: IGameResponse = await GameService.getGameById(gameId);
@@ -55,15 +54,15 @@ export default class GameController extends AbstractController {
     }
 
     public static async getGameBy(req: restify.Request, res: restify.Response, next: restify.Next) {
-        const gamename: string = req.query.gamename;
+        const name: string = req.query.name;
         const email: string = req.query.email;
-        if (gamename) {
+        if (name) {
             try {
-                const gameResponse = await GameService.getGameBy({gamename});
+                const gameResponse = await GameService.getGameBy({name});
                 res.json(gameResponse);
                 return next();
             } catch (error) {
-                GameController.errorResponse(error, res, next, `GameService { getGameBy: gamename = ${gamename}} error`);
+                GameController.errorResponse(error, res, next, `GameService { getGameBy: name = ${name}} error`);
             }
         } else {
             try {
@@ -77,7 +76,6 @@ export default class GameController extends AbstractController {
     }
 
     public static async updateGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
-        // const gameId: number = parseInt(req.params.gameId, 10);
         const gameId: string = req.params.gameId;
         const gameRequest = req.body;
         try {
@@ -90,7 +88,6 @@ export default class GameController extends AbstractController {
     }
 
     public static async deleteGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
-        // const gameId = parseInt(req.params.gameId, 10);
         const gameId: string = req.params.gameId;
         try {
             await GameService.deleteGameById(gameId);
@@ -101,11 +98,30 @@ export default class GameController extends AbstractController {
         }
     }
 
-    public static async getOwnersOfGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
-        return next();
+    public static async getDevelopersOfGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const gameId: string = req.params.gameId;
+        const page: number = parseInt(req.query.page, 10) || 0;
+        const size: number = parseInt(req.query.size, 10) || 25;
+        try {
+            const usersResponse: IUserPaginated = await GameService.getOwnersOfGameById(gameId, page, size);
+            res.send(usersResponse);
+            return next();
+        } catch (error) {
+            GameController.errorResponse(error, res, next, `GameService { getOwnersOfGame: gameId = ${gameId} } error`);
+        }
     }
 
-    public static async getDevelopersOfGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
-        return next();
+    public static async getOwnersOfGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const gameId: string = req.params.gameId;
+        const page: number = parseInt(req.query.page, 10) || 0;
+        const size: number = parseInt(req.query.size, 10) || 25;
+        try {
+            const usersResponse: IUserPaginated = await GameService.getOwnersOfGameById(gameId, page, size);
+            res.send(usersResponse);
+            return next();
+        } catch (error) {
+            GameController.errorResponse(error, res, next, `GameService { getOwnersOfGame: gameId = ${gameId} } error`);
+        }
     }
+
 }

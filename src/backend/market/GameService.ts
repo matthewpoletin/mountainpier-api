@@ -49,7 +49,7 @@ class GameService implements IGameService {
         return rp.delete(options);
     }
 
-    public async getOwners(gameId: string, page?: number, size?: number): Promise<IUserPaginated[]> {
+    public async getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserPaginated> {
         const options = getOptions(socialServiceURL, `/games/${gameId}/users`);
         return rp.get(options);
     }

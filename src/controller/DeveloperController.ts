@@ -33,7 +33,6 @@ export default class DeveloperController extends AbstractController {
 
     public static async createDeveloper(req: restify.Request, res: restify.Response, next: restify.Next) {
         const developerRequest: IDeveloperRequest = req.body;
-        // TODO: check if developer with such name exists
         try {
             const developerResponse: IDeveloperResponse = await DeveloperService.createDeveloper(developerRequest);
             res.json(201, developerResponse);
@@ -111,4 +110,5 @@ export default class DeveloperController extends AbstractController {
             DeveloperController.errorResponse(error, res, next, `DeveloperService { getGamesOfDeveloper: developerId = ${developerId} } error`);
         }
     }
+
 }

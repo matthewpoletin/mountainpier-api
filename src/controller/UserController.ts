@@ -4,11 +4,14 @@ import * as restify from "restify";
 
 import AbstractController from "./AbstractController";
 
+import GameService from "../backend/market/GameService";
 import UserService from "../backend/social/UserService";
 
+import IGameResponse from "../backend/market/interface/IGameResponse";
 import IUserRequest from "../backend/social/interface/IUserRequest";
 import IUserResponse from "../backend/social/interface/IUserResponse";
 import IUserPaginated from "../backend/social/interface/IUserResponse";
+import IServerResponse from "../backend/platform/interface/IServerResponse";
 
 export default class UserController extends AbstractController {
 
@@ -98,7 +101,7 @@ export default class UserController extends AbstractController {
         }
     }
 
-    public static async getFriends(req: restify.Request, res: restify.Response, next: restify.Next) {
+    public static async getFriendsOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
             const usersResponse: IUserResponse[] = await UserService.getFriends(userId);
@@ -109,7 +112,7 @@ export default class UserController extends AbstractController {
         }
     }
 
-    public static async getGames(req: restify.Request, res: restify.Response, next: restify.Next) {
+    public static async getGamesOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         const page: number = parseInt(req.query.page, 10) || 0;
         const size: number = parseInt(req.query.size, 10) || 25;
@@ -119,6 +122,42 @@ export default class UserController extends AbstractController {
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { getGames: userId = ${userId} } error`);
+        }
+    }
+
+    public static async addGameToUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const gameId: string = req.params.gameId;
+        try {
+            const gameResponse: IGameResponse = await GameService.getGameById(gameId);
+            await UserService.addGameToUserById(userId, gameId);
+            res.send(201);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { addGameToUser: userId = ${userId}; gameId = ${gameId} } error`);
+        }
+    }
+
+    public static async removeGamesOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const gameId: string = req.params.gameId;
+        try {
+            await UserService.removeGameOfUserById(userId, gameId);
+            res.send(204);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { removeGameToUser: userId = ${userId}; gameId = ${gameId} } error`);
+        }
+    }
+
+    public static async getServerOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const serverResponse: IServerResponse = await UserService.getServerOfUserById(userId);
+            res.json(serverResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getServerOfUser: userId = ${userId} } error`);
         }
     }
 }

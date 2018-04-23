@@ -3,11 +3,12 @@
 import * as restify from "restify";
 
 import AuthController from "./controller/AuthController";
+import ChannelController from "./controller/ChannelController";
 import DeveloperController from "./controller/DeveloperController";
 import GameController from "./controller/GameController";
 import OAuthController from "./controller/OAuthController";
+import ServerController from "./controller/ServerController";
 import UserController from "./controller/UserController";
-
 
 export default function Router(server: restify.Server) {
 
@@ -34,10 +35,15 @@ export default function Router(server: restify.Server) {
     server.patch("/users/:userId", UserController.updateUserById);
     server.del("/users/:userId", UserController.deleteUserById);
 
-    server.get("/users/:userId/friends", UserController.getFriends);
+    server.get("/users/:userId/friends", UserController.getFriendsOfUserById);
 
-    server.get("/users/:userId/games", UserController.getGames);
+    server.get("/users/:userId/games", UserController.getGamesOfUserById);
+    server.post("/users/:userId/games/:gameId", UserController.addGameToUserById);
+    server.del("/users/:userId/games/:gameId", UserController.removeGamesOfUserById);
 
+    server.get("/users/:userId/servers", UserController.getServerOfUserById);
+
+    // GAMES
     server.get("/games", GameController.getGames);
     server.post("/games", GameController.createGame);
     server.get("/games/by", GameController.getGameBy);
@@ -45,10 +51,11 @@ export default function Router(server: restify.Server) {
     server.patch("/games/:gameId", GameController.updateGameById);
     server.del("/games/:gameId", GameController.deleteGameById);
 
-    server.get("/games/:gameId/owners", GameController.getOwnersOfGameById);
-
     server.get("/games/:gameId/developers", GameController.getDevelopersOfGameById);
 
+    server.get("/games/:gameId/users", GameController.getOwnersOfGameById);
+
+    // DEVELOPERS
     server.get("/developers", DeveloperController.getDevelopers);
     server.post("/developers", DeveloperController.createDeveloper);
     server.get("/developers/by", DeveloperController.getDeveloperBy);
@@ -57,5 +64,27 @@ export default function Router(server: restify.Server) {
     server.del("/developers/:developerId", DeveloperController.deleteDeveloperById);
 
     server.get("/developers/:developerId/games", DeveloperController.getGamesOfDeveloperById);
+
+    // CHANNELS
+    server.get("/channels", ChannelController.getChannels);
+    server.post("/channels", ChannelController.createChannel);
+    server.get("/channels/by", ChannelController.getChannelBy);
+    server.get("/channels/:channelId", ChannelController.getChannelById);
+    server.patch("/channels/:channelId", ChannelController.updateChannelById);
+    server.del("/channels/:channelId", ChannelController.deleteChannelById);
+
+    // SERVERS
+    server.get("/servers", ServerController.getServers);
+    server.post("/servers", ServerController.createServer);
+    server.get("/servers/by", ServerController.getServerBy);
+    server.get("/servers/:serverId", ServerController.getServerById);
+    server.patch("/servers/:serverId", ServerController.updateServerById);
+    server.del("/servers/:serverId", ServerController.deleteServerById);
+
+    server.get("/servers/:serverId/channel", ServerController.getChannelOfServiceById);
+
+    server.get("/servers/:serverId/users", ServerController.getUsersOfServerById);
+    server.post("/servers/:serverId/users/:userId", ServerController.addUsersToServerById);
+    server.del("/servers/:serverId/users/:userId", ServerController.removeUsersFromServerById);
 
 }

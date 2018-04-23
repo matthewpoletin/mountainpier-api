@@ -13,5 +13,5 @@ export default interface IGameService {
     updateGameById(gameId: string, gameRequest: IGameRequest): Promise<IGameResponse>;
     deleteGameById(gameId: string): Promise<void>;
 
-    getOwners(gameId: string, page?: number, size?: number): Promise<IUserPaginated[]>;
+    getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserPaginated>;
 }
