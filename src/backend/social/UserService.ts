@@ -24,7 +24,7 @@ class UserService implements IUserService {
         return rp.get(options);
     }
 
-    public async createUser(userRequest: IUserRequest): Promise<{ id: number; }> {
+    public async createUser(userRequest: IUserRequest): Promise<IUserResponse> {
         const options = getOptions(socialServiceURL, `/users`, null, userRequest);
         return rp.post(options);
     }

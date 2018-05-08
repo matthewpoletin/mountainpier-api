@@ -9,7 +9,8 @@ import IOAuthLoginResponse from "./interface/OAuthLoginResponse";
 import IRefreshRequest from "./interface/RefreshRequest";
 import ITokenRequest from "./interface/TokenRequest";
 import ITokenResponse from "./interface/TokenResponse";
-import IUserResponse from "./interface/UserResponse";
+import IUserAuthRequest from "./interface/UserAuthRequest";
+import IUserAuthResponse from "./interface/UserAuthResponse";
 
 import IAuthService from "./IAuthService";
 
@@ -24,12 +25,27 @@ const authServiceURL = config.Services.Auth.url + config.Services.Auth.port + co
 
 class AuthService implements IAuthService {
 
+    public createUser(user: IUserAuthRequest): Promise<IUserAuthResponse> {
+        const options = getOptions(authServiceURL, "/user", null, user);
+        return rp.post(options);
+    }
+
+    public deleteUser(userId: string): Promise<void> {
+        const options = getOptions(authServiceURL, `/user/${userId}`, null, null);
+        return rp.delete(options);
+    }
+
+    public getAppsOfUser(userId: string): Promise<IAppResponse[]> {
+        const options = getOptions(authServiceURL, `/user/${userId}/apps`, null, null);
+        return rp.get(options);
+    }
+
     public login(credentials: ILoginRequest): Promise<ITokenResponse> {
         const options = getOptions(authServiceURL, "/token", null, credentials);
         return rp.post(options);
     }
 
-    public check(token: ITokenRequest): Promise<IUserResponse> {
+    public check(token: ITokenRequest): Promise<IUserAuthResponse> {
         const options = getOptions(authServiceURL, "/token/check", null, token);
         return rp.post(options);
     }
@@ -54,6 +70,11 @@ class AuthService implements IAuthService {
         return rp.get(options);
     }
 
+    public deleteApp(appId: number): Promise<void> {
+        const options = getOptions(authServiceURL, `/app/${appId}`, null, null);
+        return rp.delete(options);
+    }
+
     public OAuthLogin(oauthLoginRequest: IOAuthLoginRequest): Promise<IOAuthLoginResponse> {
         const options = getOptions(authServiceURL, "/oauth/login", null, oauthLoginRequest);
         return rp.post(options);
@@ -69,7 +90,7 @@ class AuthService implements IAuthService {
         return rp.post(options);
     }
 
-    public OAuthCheck(token: ITokenRequest): Promise<IUserResponse> {
+    public OAuthCheck(token: ITokenRequest): Promise<IUserAuthResponse> {
         const options = getOptions(authServiceURL, "/oauth/token/check", null, token);
         return rp.post(options);
     }
@@ -78,7 +99,6 @@ class AuthService implements IAuthService {
         const options = getOptions(authServiceURL, "/oauth/token", null, token);
         return rp.delete(options);
     }
-
 }
 
 export default new AuthService();

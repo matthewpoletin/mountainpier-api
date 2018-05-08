@@ -4,14 +4,17 @@ import * as restify from "restify";
 
 import AbstractController from "./AbstractController";
 
+import AuthService from "../backend/auth/AuthService";
 import GameService from "../backend/market/GameService";
 import UserService from "../backend/social/UserService";
 
+import IAppResponse from "../backend/auth/interface/AppResponse";
+import IUserAuthRequest from "../backend/auth/interface/UserAuthRequest";
+import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
 import IGameResponse from "../backend/market/interface/IGameResponse";
-import IUserRequest from "../backend/social/interface/IUserRequest";
+import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserResponse from "../backend/social/interface/IUserResponse";
 import IUserPaginated from "../backend/social/interface/IUserResponse";
-import IServerResponse from "../backend/platform/interface/IServerResponse";
 
 export default class UserController extends AbstractController {
 
@@ -34,11 +37,18 @@ export default class UserController extends AbstractController {
     }
 
     public static async createUser(req: restify.Request, res: restify.Response, next: restify.Next) {
-        const userRequest: IUserRequest = req.body;
-        // TODO: check if user with such username exists
+        const userRequest = req.body;
         try {
             const userResponse: IUserResponse = await UserService.createUser(userRequest);
-            res.json(201, userResponse);
+            const userAuthRequest: IUserAuthRequest = {
+                id: userResponse.id,
+                password: userRequest.password,
+                role: userRequest.role,
+                username: userResponse.username,
+            };
+            userAuthRequest.id = userResponse.id;
+            const userAuthResponse: IUserAuthResponse = await AuthService.createUser(userAuthRequest);
+            res.json(201, {...userResponse, ...userAuthResponse});
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { createUser } error`);
@@ -160,4 +170,16 @@ export default class UserController extends AbstractController {
             UserController.errorResponse(error, res, next, `UserService { getServerOfUser: userId = ${userId} } error`);
         }
     }
+
+    public static async getAppsOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const appsResponse: IAppResponse[] = await AuthService.getAppsOfUser(userId);
+            res.json(appsResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getAppsOfUser: userId = ${userId} } error`);
+        }
+    }
+
 }

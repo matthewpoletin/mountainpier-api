@@ -18,8 +18,9 @@ export default function Router(server: restify.Server) {
     server.post("/auth/refresh", AuthController.refresh);
     server.del("/auth/logout", AuthController.logout);
 
-    server.get("/auth/oauth/app", OAuthController.createApp);
+    server.post("/auth/oauth/app", OAuthController.createApp);
     server.get("/auth/oauth/app/:appId", OAuthController.getApp);
+    server.del("/auth/oauth/app/:appId", OAuthController.deleteApp);
 
     server.post("/auth/oauth/login", OAuthController.login);
     server.post("/auth/oauth/token", OAuthController.getToken);
@@ -42,6 +43,8 @@ export default function Router(server: restify.Server) {
     server.del("/users/:userId/games/:gameId", UserController.removeGamesOfUserById);
 
     server.get("/users/:userId/servers", UserController.getServerOfUserById);
+
+    server.get("/users/:userId/apps", UserController.getAppsOfUserById);
 
     // GAMES
     server.get("/games", GameController.getGames);

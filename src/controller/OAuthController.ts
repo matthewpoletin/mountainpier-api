@@ -25,7 +25,7 @@ export default class OAuthController extends AbstractController {
             res.json(201, appResponse);
             return next();
         } catch (error) {
-            OAuthController.errorResponse(error, res, next, `OAuthService { logout } error`);
+            OAuthController.errorResponse(error, res, next, `OAuthService { createApp } error`);
         }
     }
 
@@ -36,7 +36,18 @@ export default class OAuthController extends AbstractController {
             res.send(appResponse);
             return next();
         } catch (error) {
-            OAuthController.errorResponse(error, res, next, `OAuthService { logout } error`);
+            OAuthController.errorResponse(error, res, next, `OAuthService { getApp } error`);
+        }
+    }
+
+    public static async deleteApp(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const appId: number = parseInt(req.params.appId, 10);
+        try {
+            await authService.deleteApp(appId);
+            res.send(204);
+            return next();
+        } catch (error) {
+            OAuthController.errorResponse(error, res, next, `OAuthController { deleteApp } error`);
         }
     }
 
@@ -94,5 +105,4 @@ export default class OAuthController extends AbstractController {
             OAuthController.errorResponse(error, res, next, `OAuthController { deleteToken } error`);
         }
     }
-
 }

@@ -26,7 +26,7 @@ export default class AuthController extends AbstractController {
         const checkRequest: ITokenRequest = req.body;
         try {
             const authResponse = await authService.check(checkRequest);
-            return res.json(201, authResponse);
+            return res.json(200, authResponse);
         } catch (error) {
             AuthController.errorResponse(error, res, next, `AuthService { check } error`);
         }

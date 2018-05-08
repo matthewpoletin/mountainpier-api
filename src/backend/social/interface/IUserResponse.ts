@@ -3,7 +3,7 @@
 import IPaginated from "../../IPaginated";
 
 export default interface IUserResponse {
-    id: number;
+    id: string;
     username?: string;
     avatar?: string;
     regEmail?: string;
