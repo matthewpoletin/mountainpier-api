@@ -1,0 +1,14 @@
+{
+	"apps": [
+		{
+			"env": {
+				"NODE_ENV": "production"
+			},
+			"error_file": "./log/app.log",
+			"name": "mountainpier-api",
+			"out_file": "./log/error.log",
+			"restart_delay": "600000",
+			"script": "index.js"
+		}
+	]
+}

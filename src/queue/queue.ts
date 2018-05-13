@@ -3,18 +3,19 @@
 import * as rp from "request-promise";
 import * as repository from "./repository";
 
+// TODO: fix rp.post(backendRequest)
 export function activate(queue) {
-    setInterval(async () => {
-        const length = await repository.length(queue);
-        for (let i = 0; i < length; i++) {
-            const backendRequest = await repository.popFront(queue);
-            try {
-                const backendResponse = await rp.post(backendRequest);
-                console.log("Queued BackendResponse: " + JSON.stringify(backendResponse));
-            } catch (error) {
-                await repository.pushFront(backendRequest, queue);
-                break;
-            }
-        }
-    }, 5000);
+    // setInterval(async () => {
+    //     const length = await repository.length(queue);
+    //     for (let i = 0; i < length; i++) {
+    //         const backendRequest = await repository.popFront(queue);
+    //         try {
+    //             const backendResponse = await rp.post(backendRequest);
+    //             console.log("Queued BackendResponse: " + JSON.stringify(backendResponse));
+    //         } catch (error) {
+    //             await repository.pushFront(backendRequest, queue);
+    //             break;
+    //         }
+    //     }
+    // }, 5000);
 }

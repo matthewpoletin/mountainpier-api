@@ -22,6 +22,6 @@
 		}
 	},
 	"NoAuthCheckUrl": [
-	"/auth/*"
+	"/auth/*", "/users"
 	]
 }

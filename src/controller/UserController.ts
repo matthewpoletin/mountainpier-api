@@ -39,7 +39,12 @@ export default class UserController extends AbstractController {
     public static async createUser(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userRequest = req.body;
         try {
-            const userResponse: IUserResponse = await UserService.createUser(userRequest);
+            const userSocialRequest = {
+                regEmail: userRequest.email,
+                username: userRequest.username,
+            };
+            const userResponse: IUserResponse = await UserService.createUser(userSocialRequest);
+            if (typeof userRequest.role === "undefined") { userRequest.role = "USER"; }
             const userAuthRequest: IUserAuthRequest = {
                 id: userResponse.id,
                 password: userRequest.password,
@@ -103,7 +108,9 @@ export default class UserController extends AbstractController {
     public static async deleteUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
+            // TODO: check if succeeds
             await UserService.deleteUserById(userId);
+            await AuthService.deleteUser(userId);
             res.send(204);
             return next();
         } catch (error) {

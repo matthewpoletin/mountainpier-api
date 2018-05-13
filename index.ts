@@ -13,7 +13,7 @@ import Router from "./src/Router";
 // noinspection TsLint
 const packageJson = require("./package.json");
 
-class App {
+class Index {
     private server: restify.Server;
     private port: number | string;
 
@@ -76,4 +76,4 @@ class App {
 
 }
 
-new App(parseInt(process.argv[2], 10) || 8549).init();
+new Index(parseInt(process.argv[2], 10) || 8549).init();
