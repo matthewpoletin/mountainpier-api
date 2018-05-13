@@ -3,7 +3,7 @@
 import * as restify from "restify";
 
 import config from "../../IConfig";
-import logger from "../../logger";
+import logger from "../../Logger";
 import authService from "../backend/auth/AuthService";
 
 export default function authCheck() {
