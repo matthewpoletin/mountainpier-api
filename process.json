@@ -4,10 +4,9 @@
 			"env": {
 				"NODE_ENV": "production"
 			},
-			"error_file": "./log/app.log",
+			"error_file": "./log/error.log",
 			"name": "mountainpier-api",
-			"out_file": "./log/error.log",
-			"restart_delay": "600000",
+			"out_file": "./log/app.log",
 			"script": "index.js"
 		}
 	]

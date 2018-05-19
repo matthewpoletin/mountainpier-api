@@ -7,6 +7,7 @@ import ChannelController from "./controller/ChannelController";
 import DeveloperController from "./controller/DeveloperController";
 import GameController from "./controller/GameController";
 import OAuthController from "./controller/OAuthController";
+import ProviderController from "./controller/ProviderController";
 import ServerController from "./controller/ServerController";
 import UserController from "./controller/UserController";
 
@@ -27,6 +28,10 @@ export default function Router(server: restify.Server) {
     server.post("/auth/oauth/token/refresh", OAuthController.refreshToken);
     server.post("/auth/oauth/token/check", OAuthController.checkToken);
     server.del("/auth/oauth/token", OAuthController.deleteToken);
+
+    server.post("/auth/providers/twitch/users/:userId", ProviderController.createToken);
+    server.get("/auth/providers/twitch/users/:userId", ProviderController.getToken);
+    server.del("/auth/providers/twitch/users/:userId", ProviderController.deleteToken);
 
     // USERS
     server.get("/users", UserController.getUsers);
