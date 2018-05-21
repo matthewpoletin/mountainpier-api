@@ -1,5 +1,9 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
+import IAuthService from "./IAuthService";
 import IAppRequest from "./interface/AppRequest";
 import IAppResponse from "./interface/AppResponse";
 import IGetTokenRequest from "./interface/GetTokenRequest";
@@ -12,31 +16,25 @@ import ITokenResponse from "./interface/TokenResponse";
 import IUserAuthRequest from "./interface/UserAuthRequest";
 import IUserAuthResponse from "./interface/UserAuthResponse";
 
-import IAuthService from "./IAuthService";
-
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const authServiceURL = config.Services.Auth.url + config.Services.Auth.port + config.Services.Auth.base;
+const mode = process.env.NODE_ENV || "development";
+const authServiceURL = config[mode].services.auth;
 
 class AuthService implements IAuthService {
 
     public createUser(user: IUserAuthRequest): Promise<IUserAuthResponse> {
-        const options = getOptions(authServiceURL, "/user", null, user);
+        const options = getOptions(authServiceURL, "/users", null, user);
         return rp.post(options);
     }
 
     public deleteUser(userId: string): Promise<void> {
-        const options = getOptions(authServiceURL, `/user/${userId}`, null, null);
+        const options = getOptions(authServiceURL, `/users/${userId}`, null, null);
         return rp.delete(options);
     }
 
     public getAppsOfUser(userId: string): Promise<IAppResponse[]> {
-        const options = getOptions(authServiceURL, `/user/${userId}/apps`, null, null);
+        const options = getOptions(authServiceURL, `/users/${userId}/apps`, null, null);
         return rp.get(options);
     }
 

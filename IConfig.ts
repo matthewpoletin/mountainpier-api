@@ -1,26 +1,28 @@
 "use strict";
 
 interface IConfig {
-    Services: {
-        Auth: {
-            url: string;
-            port: string;
-            base: string;
+    development: {
+        services: {
+            auth: string,
+            social: string,
+            market: string,
+            platform: string,
+        };
+        twitch: {
+            clientId: string,
+            clientSecret: string,
         },
-        Social: {
-            url: string;
-            port: string;
-            base: string;
-        },
-        Market: {
-            url: string;
-            port: string;
-            base: string;
-        },
-        Platform: {
-            url: string;
-            port: string;
-            base: string;
+    };
+    production: {
+        services: {
+            auth: string,
+            social: string,
+            market: string,
+            platform: string,
+        };
+        twitch: {
+            clientId: string,
+            clientSecret: string,
         },
     };
     NoAuthCheckUrl: string[];

@@ -1,21 +1,19 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
 import {IUserPaginated} from "../social/interface/IUserResponse";
+import IGameService from "./IGameService";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
 import IGamePaginated from "./interface/IGameResponse";
 
-import IGameService from "./IGameService";
-
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const socialServiceURL = config.Services.Social.url + config.Services.Social.port + config.Services.Social.base;
-const marketServiceURL = config.Services.Market.url + config.Services.Market.port + config.Services.Market.base;
+const mode = process.env.NODE_ENV || "development";
+const socialServiceURL = config[mode].services.social;
+const marketServiceURL = config[mode].services.market;
 
 class GameService implements IGameService {
 

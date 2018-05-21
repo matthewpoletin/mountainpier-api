@@ -1,21 +1,19 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
 import IServerResponse from "../platform/interface/IServerResponse";
 import IUserRequest from "./interface/IUserRequest";
 import IUserResponse from "./interface/IUserResponse";
 import IUserPaginated from "./interface/IUserResponse";
-
 import IUserService from "./IUserService";
 
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const socialServiceURL = config.Services.Social.url + config.Services.Social.port + config.Services.Social.base;
-const platformServiceURL = config.Services.Platform.url + config.Services.Platform.port + config.Services.Platform.base;
+const mode = process.env.NODE_ENV || "development";
+const socialServiceURL = config[mode].services.social;
+const platformServiceURL = config[mode].services.platform;
 
 class UserService implements IUserService {
 

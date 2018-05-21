@@ -1,27 +1,30 @@
 {
-	"Services": {
-		"Auth": {
-			"url": "http://localhost:",
-			"port": 8550,
-			"base": "/api/auth"
+	"development": {
+		"services": {
+			"auth": "http://localhost:8550/api/auth",
+			"social": "http://localhost:8551/api/social",
+			"market": "http://localhost:8552/api/market",
+			"platform": "http://localhost:8553/api/platform"
 		},
-		"Social": {
-			"url": "http://localhost:",
-			"port": 8551,
-			"base": "/api/social"
+		"twitch": {
+			"clientId": "m0ickj58eteefym2amg6smdrtu2sxx",
+			"clientSecret": "dauqixwqom9sdjafxg94qi4vvfcada"
+		}
+	},
+	"production": {
+		"services": {
+			"auth": "http://auth.mountainpier.ru",
+			"social": "http://social.mountainpier.ru",
+			"market": "http://market.mountainpier.ru",
+			"platform": "http://platform.mountanpier.ru"
 		},
-		"Market": {
-			"url": "http://localhost:",
-			"port": 8552,
-			"base": "/api/market"
-		},
-		"Platform": {
-			"url": "http://localhost:",
-			"port": 8553,
-			"base": "/api/platform"
+		"twitch": {
+			"clientId": "gmorlpxdgnavsssk2gudj355nfx2o6",
+			"clientSecret": "ic50mmqzg8syju1vrfeohotwi1pgex"
 		}
 	},
 	"NoAuthCheckUrl": [
-	"/auth/*", "/users"
+		"/auth/*",
+		"/users"
 	]
 }

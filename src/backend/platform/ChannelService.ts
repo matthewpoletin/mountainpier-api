@@ -1,19 +1,17 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
+import IChannelService from "./IChannelService";
 import IChannelRequest from "./interface/IChannelRequest";
 import IChannelResponse from "./interface/IChannelResponse";
 import IChannelPaginated from "./interface/IChannelResponse";
 
-import IChannelService from "./IChannelService";
-
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const platformServiceURL = config.Services.Platform.url + config.Services.Platform.port + config.Services.Platform.base;
+const mode = process.env.NODE_ENV || "development";
+const platformServiceURL = config[mode].services.platform;
 
 class ChannelService implements IChannelService {
 

@@ -1,21 +1,19 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
+import IDeveloperService from "./IDeveloperService";
 import IDeveloperRequest from "./interface/IDeveloperRequest";
 import IDeveloperResponse from "./interface/IDeveloperResponse";
 import IDeveloperPaginated from "./interface/IDeveloperResponse";
 import {IGamePaginated} from "./interface/IGameResponse";
 
-import IDeveloperService from "./IDeveloperService";
-
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const socialServiceURL = config.Services.Social.url + config.Services.Social.port + config.Services.Social.base;
-const marketServiceURL = config.Services.Market.url + config.Services.Market.port + config.Services.Market.base;
+const mode = process.env.NODE_ENV || "development";
+const socialServiceURL  = config[mode].services.social;
+const marketServiceURL  = config[mode].services.market;
 
 class DeveloperService implements IDeveloperService {
 

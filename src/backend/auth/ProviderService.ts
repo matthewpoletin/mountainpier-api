@@ -1,18 +1,16 @@
 "use strict";
 
+import config from "../../../IConfig";
+import getOptions from "../../Options";
+import requestWrapper from "../authrequest";
 import IProviderTokenRequest from "./interface/ProviderTokenRequest";
 import IProviderTokenResponse from "./interface/ProviderTokenResponse";
-
 import IProviderService from "./IProviderService";
 
-import getOptions from "../../Options";
-
-import config from "../../../IConfig";
-
-import requestWrapper from "../authrequest";
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
-const authServiceURL = config.Services.Auth.url + config.Services.Auth.port + config.Services.Auth.base;
+const mode = process.env.NODE_ENV || "development";
+const authServiceURL = config[mode].services.auth;
 
 class ProviderService implements IProviderService {
 
