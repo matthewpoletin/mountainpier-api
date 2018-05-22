@@ -12,7 +12,7 @@ import IMatchRequest from "../backend/platform/interface/IMatchRequest";
 import IServerRequest from "../backend/platform/interface/IServerRequest";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IServerPaginated from "../backend/platform/interface/IServerResponse";
-import {IUserPaginated} from "../backend/social/interface/IUserResponse";
+import {IUserPaginated} from "../backend/social/interface/IUserSocialResponse";
 
 export default class ServerController extends AbstractController {
 

@@ -8,7 +8,8 @@
 		},
 		"twitch": {
 			"clientId": "m0ickj58eteefym2amg6smdrtu2sxx",
-			"clientSecret": "dauqixwqom9sdjafxg94qi4vvfcada"
+			"clientSecret": "dauqixwqom9sdjafxg94qi4vvfcada",
+			"redirectUri": "http://localhost:8080/oauth/twitch"
 		}
 	},
 	"production": {
@@ -20,7 +21,8 @@
 		},
 		"twitch": {
 			"clientId": "gmorlpxdgnavsssk2gudj355nfx2o6",
-			"clientSecret": "ic50mmqzg8syju1vrfeohotwi1pgex"
+			"clientSecret": "ic50mmqzg8syju1vrfeohotwi1pgex",
+			"redirectUri": "https://mountainpier.ru/oauth/twitch"
 		}
 	},
 	"NoAuthCheckUrl": [

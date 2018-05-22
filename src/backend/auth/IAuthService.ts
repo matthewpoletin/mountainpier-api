@@ -3,6 +3,8 @@
 import IAppRequest from "./interface/AppRequest";
 import IAppResponse from "./interface/AppResponse";
 import IGetTokenRequest from "./interface/GetTokenRequest";
+import ITwitchTokenAuthRequest from "./interface/ITwitchTokenAuthRequest";
+import ITwitchTokenAuthResponse from "./interface/ITwitchTokenAuthResponse";
 import ILoginRequest from "./interface/LoginRequest";
 import IOAuthLoginRequest from "./interface/OAuthLoginRequest";
 import IOAuthLoginResponse from "./interface/OAuthLoginResponse";
@@ -15,6 +17,10 @@ import IUserAuthResponse from "./interface/UserAuthResponse";
 export default interface IAuthService {
 
     createUser(user: IUserAuthRequest): Promise<IUserAuthResponse>;
+
+    getUserById(userId: string): Promise<IUserAuthResponse>;
+
+    updateUserCredentials(userId: string, credentialsRequest): Promise<IUserAuthResponse>;
 
     deleteUser(userId: string): Promise<void>;
 
@@ -43,5 +49,9 @@ export default interface IAuthService {
     OAuthCheck(token: ITokenRequest): Promise<IUserAuthResponse>;
 
     OAuthDeleteToken(token: ITokenRequest): Promise<void>;
+
+    createTwitchToken(userId: string, tokenRequest: ITwitchTokenAuthRequest): Promise<ITwitchTokenAuthResponse>;
+
+    updateTwitchToken(userId: string, tokenRequest: ITwitchTokenAuthRequest): Promise<ITwitchTokenAuthResponse>;
 
 }

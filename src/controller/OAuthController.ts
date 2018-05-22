@@ -14,7 +14,7 @@ import IOAuthLoginResponse from "../backend/auth/interface/OAuthLoginResponse";
 import IRefreshRequest from "../backend/auth/interface/RefreshRequest";
 import ITokenRequest from "../backend/auth/interface/TokenRequest";
 import ITokenResponse from "../backend/auth/interface/TokenResponse";
-import IUserResponse from "../backend/social/interface/IUserResponse";
+import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
 
 export default class OAuthController extends AbstractController {
 
@@ -87,7 +87,7 @@ export default class OAuthController extends AbstractController {
     public static async checkToken(req: restify.Request, res: restify.Response, next: restify.Next) {
         const tokenRequest: ITokenRequest = req.body;
         try {
-            const userResponse: IUserResponse = await authService.OAuthCheck(tokenRequest);
+            const userResponse: IUserAuthResponse = await authService.OAuthCheck(tokenRequest);
             res.send(userResponse);
             return next();
         } catch (error) {

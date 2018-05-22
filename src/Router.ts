@@ -13,6 +13,8 @@ import UserController from "./controller/UserController";
 
 export default function Router(server: restify.Server) {
 
+    server.post("/test", UserController.getUserByTwitchToken);
+
     // AUTH
     server.post("/auth/login", AuthController.login);
     server.post("/auth/check", AuthController.check);
@@ -39,6 +41,7 @@ export default function Router(server: restify.Server) {
     server.get("/users/by", UserController.getUserBy);
     server.get("/users/:userId", UserController.getUserById);
     server.patch("/users/:userId", UserController.updateUserById);
+    server.patch("/users/:userId/credentials", UserController.updateUserCredentials);
     server.del("/users/:userId", UserController.deleteUserById);
 
     server.get("/users/:userId/friends", UserController.getFriendsOfUserById);
@@ -50,6 +53,8 @@ export default function Router(server: restify.Server) {
     server.get("/users/:userId/servers", UserController.getServerOfUserById);
 
     server.get("/users/:userId/apps", UserController.getAppsOfUserById);
+
+    server.post("/users/twitch", UserController.authUserByTwitch);
 
     // GAMES
     server.get("/games", GameController.getGames);

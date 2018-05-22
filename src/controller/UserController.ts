@@ -9,12 +9,17 @@ import GameService from "../backend/market/GameService";
 import UserService from "../backend/social/UserService";
 
 import IAppResponse from "../backend/auth/interface/AppResponse";
+import ITwitchTokenAuthRequest from "../backend/auth/interface/ITwitchTokenAuthRequest";
 import IUserAuthRequest from "../backend/auth/interface/UserAuthRequest";
 import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
+import IUserRegRequest from "../backend/interface/IUserRegRequest";
 import IGameResponse from "../backend/market/interface/IGameResponse";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
-import IUserResponse from "../backend/social/interface/IUserResponse";
-import IUserPaginated from "../backend/social/interface/IUserResponse";
+import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
+import IUserSocialResponse from "../backend/social/interface/IUserSocialResponse";
+import IUserPaginated from "../backend/social/interface/IUserSocialResponse";
+import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
+import TwitchService from "../backend/twitch/TwitchService";
 
 export default class UserController extends AbstractController {
 
@@ -37,33 +42,84 @@ export default class UserController extends AbstractController {
     }
 
     public static async createUser(req: restify.Request, res: restify.Response, next: restify.Next) {
-        const userRequest = req.body;
+        const userRequest: IUserRegRequest = req.body;
         try {
-            const userSocialRequest = {
-                regEmail: userRequest.email,
-                username: userRequest.username,
-            };
-            const userResponse: IUserResponse = await UserService.createUser(userSocialRequest);
+            const userSocialResponse: IUserSocialResponse = await UserService.createUser(userRequest);
             if (typeof userRequest.role === "undefined") { userRequest.role = "USER"; }
             const userAuthRequest: IUserAuthRequest = {
-                id: userResponse.id,
+                id: userSocialResponse.id,
                 password: userRequest.password,
                 role: userRequest.role,
-                username: userResponse.username,
+                username: userSocialResponse.username,
             };
-            userAuthRequest.id = userResponse.id;
             const userAuthResponse: IUserAuthResponse = await AuthService.createUser(userAuthRequest);
-            res.json(201, {...userResponse, ...userAuthResponse});
+            res.json(201, {...userSocialResponse, ...userAuthResponse});
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { createUser } error`);
         }
     }
 
+    public static async authUserByTwitch(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const code: string = req.body.code;
+        try {
+            // Get twitch access token
+            const token: ITwitchTokenResponse = await TwitchService.getAccessToken(code);
+            // Get twitch user by access token
+            const twitchUserResponse = await TwitchService.getUserByAccessToken(token.access_token);
+            // Find user with same username
+            const userExistsResponse = await UserService.getUserBy({username: twitchUserResponse.name});
+            if (userExistsResponse === undefined) {
+                // If user doesn't exist create new one
+                // Create user in social service
+                const userSocialRequest: IUserSocialRequest = {
+                    regEmail: twitchUserResponse.email,
+                    username: twitchUserResponse.name,
+                };
+                const userSocialResponse: IUserSocialResponse = await UserService.createUser(userSocialRequest);
+                // Create user in auth service
+                const userAuthRequest: IUserAuthRequest = {
+                    id: userSocialResponse.id,
+                    password: token.access_token,
+                    role: "USER",
+                    username: userSocialResponse.username,
+                };
+                const userAuthResponse: IUserAuthResponse = await AuthService.createUser(userAuthRequest);
+                // Save twitch token of user
+                const tokenAuthRequest: ITwitchTokenAuthRequest = {
+                    accessToken: token.access_token,
+                    expiresIn: token.expires_in,
+                    refreshToken: token.refresh_token,
+                    scope: token.scope.toString(),
+                    twitchId: twitchUserResponse._id,
+                };
+                await AuthService.createTwitchToken(userSocialResponse.id, tokenAuthRequest);
+                // Return created user
+                res.json(201, {...userSocialResponse, ...userAuthResponse, new: true});
+            } else {
+                // Else update existing one
+                const userAuthResponse = await AuthService.getUserById(userExistsResponse.id);
+                // Update his access token by new code
+                const tokenAuthRequest: ITwitchTokenAuthRequest = {
+                    accessToken: token.access_token,
+                    expiresIn: token.expires_in,
+                    refreshToken: token.refresh_token,
+                    scope: token.scope.toString(),
+                    twitchId: twitchUserResponse._id,
+                };
+                await AuthService.updateTwitchToken(userExistsResponse.id, tokenAuthRequest);
+                res.json(200, {...userExistsResponse, ...userAuthResponse, new: false});
+            }
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { createUserByTwitch: code = ${code} } error`);
+        }
+    }
+
     public static async getUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
-            const userResponse: IUserResponse = await UserService.getUserById(userId);
+            const userResponse: IUserSocialResponse = await UserService.getUserById(userId);
             res.json(userResponse);
             return next();
         } catch (error) {
@@ -93,15 +149,38 @@ export default class UserController extends AbstractController {
         }
     }
 
+    public static async getUserByTwitchToken(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const accessToken: string = req.body.accessToken;
+        try {
+            const twitchUserResponse = await TwitchService.getUserByAccessToken(accessToken);
+            res.json(201, twitchUserResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { createUserByTwitch: code = ${accessToken} } error`);
+        }
+    }
+
     public static async updateUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         const userRequest = req.body;
         try {
-            const userResponse: IUserResponse = await UserService.updateUserById(userId, userRequest);
+            const userResponse: IUserSocialResponse = await UserService.updateUserById(userId, userRequest);
             res.json(userResponse);
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { updateUser: userId = ${userId} } error`);
+        }
+    }
+
+    public static async updateUserCredentials(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const credentials: IUserAuthRequest = req.body;
+        try {
+            const userResponse: IUserAuthResponse = await AuthService.updateUserCredentials(userId, credentials);
+            res.json(userResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { updateCredentials: userId = ${userId} } error`);
         }
     }
 
@@ -121,7 +200,7 @@ export default class UserController extends AbstractController {
     public static async getFriendsOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
-            const usersResponse: IUserResponse[] = await UserService.getFriends(userId);
+            const usersResponse: IUserSocialResponse[] = await UserService.getFriends(userId);
             res.json(usersResponse);
             return next();
         } catch (error) {
@@ -148,7 +227,7 @@ export default class UserController extends AbstractController {
         try {
             const gameResponse: IGameResponse = await GameService.getGameById(gameId);
             await UserService.addGameToUserById(userId, gameId);
-            res.send(201);
+            res.send(201, gameResponse);
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { addGameToUser: userId = ${userId}; gameId = ${gameId} } error`);
@@ -188,5 +267,4 @@ export default class UserController extends AbstractController {
             UserController.errorResponse(error, res, next, `UserService { getAppsOfUser: userId = ${userId} } error`);
         }
     }
-
 }

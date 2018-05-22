@@ -1,6 +1,6 @@
 "use strict";
 
-import {IUserPaginated} from "../social/interface/IUserResponse";
+import {IUserPaginated} from "../social/interface/IUserSocialResponse";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
 import IGamePaginated from "./interface/IGameResponse";

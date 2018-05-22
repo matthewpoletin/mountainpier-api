@@ -4,9 +4,9 @@ import config from "../../../IConfig";
 import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
 import IServerResponse from "../platform/interface/IServerResponse";
-import IUserRequest from "./interface/IUserRequest";
-import IUserResponse from "./interface/IUserResponse";
-import IUserPaginated from "./interface/IUserResponse";
+import IUserSocialRequest from "./interface/IUserSocialRequest";
+import IUserSocialResponse from "./interface/IUserSocialResponse";
+import IUserPaginated from "./interface/IUserSocialResponse";
 import IUserService from "./IUserService";
 
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
@@ -22,22 +22,22 @@ class UserService implements IUserService {
         return rp.get(options);
     }
 
-    public async createUser(userRequest: IUserRequest): Promise<IUserResponse> {
+    public async createUser(userRequest: IUserSocialRequest): Promise<IUserSocialResponse> {
         const options = getOptions(socialServiceURL, `/users`, null, userRequest);
         return rp.post(options);
     }
 
-    public async getUserById(userId: string): Promise<IUserResponse> {
+    public async getUserById(userId: string): Promise<IUserSocialResponse> {
         const options = getOptions(socialServiceURL, `/users/${userId}`);
         return rp.get(options);
     }
 
-    public async getUserBy(params): Promise<IUserResponse> {
+    public async getUserBy(params): Promise<IUserSocialResponse> {
         const options = getOptions(socialServiceURL, `/users/by`, params);
         return rp.get(options);
     }
 
-    public async updateUserById(userId: string, userRequest: IUserRequest): Promise<IUserResponse> {
+    public async updateUserById(userId: string, userRequest: IUserSocialRequest): Promise<IUserSocialResponse> {
         const options = getOptions(socialServiceURL, `/users/${userId}`, null, userRequest);
         return rp.patch(options);
     }
@@ -47,7 +47,7 @@ class UserService implements IUserService {
         return rp.delete(options);
     }
 
-    public async getFriends(userId: string, page?: number, size?: number): Promise<IUserResponse[]> {
+    public async getFriends(userId: string, page?: number, size?: number): Promise<IUserSocialResponse[]> {
         const options = getOptions(socialServiceURL, `/users/${userId}/friends`, {page, size});
         return rp.get(options);
     }

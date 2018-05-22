@@ -1,6 +1,6 @@
 "use strict";
 
-export default interface IUserRequest {
+export default interface IUserSocialRequest {
     username?: string;
     avatar?: string;
     regEmail?: string;

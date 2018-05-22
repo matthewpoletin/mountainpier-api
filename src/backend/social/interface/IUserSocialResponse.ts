@@ -2,7 +2,7 @@
 
 import IPaginated from "../../IPaginated";
 
-export default interface IUserResponse {
+export default interface IUserSocialResponse {
     id: string;
     username?: string;
     avatar?: string;
@@ -13,5 +13,5 @@ export default interface IUserResponse {
 }
 
 export interface IUserPaginated extends IPaginated {
-    content: IUserResponse[];
+    content: IUserSocialResponse[];
 }

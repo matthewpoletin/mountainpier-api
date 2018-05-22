@@ -11,6 +11,7 @@ interface IConfig {
         twitch: {
             clientId: string,
             clientSecret: string,
+            redirectUri: string,
         },
     };
     production: {
@@ -23,6 +24,7 @@ interface IConfig {
         twitch: {
             clientId: string,
             clientSecret: string,
+            redirectUri: string,
         },
     };
     NoAuthCheckUrl: string[];

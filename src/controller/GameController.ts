@@ -9,7 +9,7 @@ import GameService from "../backend/market/GameService";
 import IGameRequest from "../backend/market/interface/IGameRequest";
 import IGameResponse from "../backend/market/interface/IGameResponse";
 import IGamePaginated from "../backend/market/interface/IGameResponse";
-import {IUserPaginated} from "../backend/social/interface/IUserResponse";
+import {IUserPaginated} from "../backend/social/interface/IUserSocialResponse";
 
 export default class GameController extends AbstractController {
 
