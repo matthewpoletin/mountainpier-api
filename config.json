@@ -14,10 +14,10 @@
 	},
 	"production": {
 		"services": {
-			"auth": "http://auth.mountainpier.ru",
-			"social": "http://social.mountainpier.ru",
-			"market": "http://market.mountainpier.ru",
-			"platform": "http://platform.mountanpier.ru"
+			"auth": "http://auth.mountainpier.ru/api/auth",
+			"social": "http://social.mountainpier.ru/api/social",
+			"market": "http://market.mountainpier.ru/api/market",
+			"platform": "http://platform.mountanpier.ru/api/platform"
 		},
 		"twitch": {
 			"clientId": "gmorlpxdgnavsssk2gudj355nfx2o6",
