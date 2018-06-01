@@ -13,13 +13,15 @@ import ITwitchTokenAuthRequest from "../backend/auth/interface/ITwitchTokenAuthR
 import IUserAuthRequest from "../backend/auth/interface/UserAuthRequest";
 import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
 import IUserRegRequest from "../backend/interface/IUserRegRequest";
-import IGameResponse from "../backend/market/interface/IGameResponse";
+import IGameResponse, {IGamePaginated} from "../backend/market/interface/IGameResponse";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
 import IUserSocialResponse from "../backend/social/interface/IUserSocialResponse";
 import IUserPaginated from "../backend/social/interface/IUserSocialResponse";
 import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
 import TwitchService from "../backend/twitch/TwitchService";
+import DeveloperService from "../backend/market/DeveloperService";
+import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
 
 export default class UserController extends AbstractController {
 
@@ -303,4 +305,17 @@ export default class UserController extends AbstractController {
             UserController.errorResponse(error, res, next, `UserService { getAppsOfUser: userId = ${userId} } error`);
         }
     }
+
+    public static async getGamesOfDeveloper(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const developerResponse: IDeveloperResponse = await DeveloperService.getDeveloperBy({userId});
+            const gamesResponse: IGamePaginated = await DeveloperService.getGamesOfDeveloperById(developerResponse.id);
+            res.json(gamesResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getGamesOfDeveloper: userId = ${userId} } error`);
+        }
+    }
+
 }

@@ -59,6 +59,8 @@ export default function Router(server: restify.Server) {
 
     server.post("/users/twitch", UserController.authUserByTwitch);
 
+    server.get("/users/:userId/developer/games", UserController.getGamesOfDeveloper);
+
     // GAMES
     server.get("/games", GameController.getGames);
     server.post("/games", GameController.createGame);
