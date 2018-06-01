@@ -52,6 +52,21 @@ class UserService implements IUserService {
         return rp.get(options);
     }
 
+    public async addFriend(userId: string, friendId: string): Promise<void> {
+        const options = getOptions(socialServiceURL, `/users/${userId}/friends/${friendId}`);
+        return rp.post(options);
+    }
+
+    public async removeFriend(userId: string, friendId: string): Promise<void> {
+        const options = getOptions(socialServiceURL, `/users/${userId}/friends/${friendId}`);
+        return rp.delete(options);
+    }
+
+    public async getRelation(userAId: string, userBId: string): Promise<any> {
+        const options = getOptions(socialServiceURL, `/users/${userAId}/relation/${userBId}`);
+        return rp.get(options);
+    }
+
     public async getGames(userId: string, page: number, size: number): Promise<[string]> {
         const options = getOptions(socialServiceURL, `/users/${userId}/games`, {page, size});
         return rp.get(options);
@@ -71,7 +86,6 @@ class UserService implements IUserService {
         const options = getOptions(platformServiceURL, `/users/${userId}/servers`);
         return rp.get(options);
     }
-
 }
 
 export default new UserService();

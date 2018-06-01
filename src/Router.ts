@@ -45,6 +45,9 @@ export default function Router(server: restify.Server) {
     server.del("/users/:userId", UserController.deleteUserById);
 
     server.get("/users/:userId/friends", UserController.getFriendsOfUserById);
+    server.post("/users/:userId/friends/:friendId", UserController.addFriendToUserById);
+    server.del("/users/:userId/friends/:friendId", UserController.removeFriendFromUserById);
+    server.get("/users/:userAId/relation/:userBId", UserController.getRelationOfUsersById);
 
     server.get("/users/:userId/games", UserController.getGamesOfUserById);
     server.post("/users/:userId/games/:gameId", UserController.addGameToUserById);

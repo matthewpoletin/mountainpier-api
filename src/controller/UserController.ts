@@ -208,6 +208,42 @@ export default class UserController extends AbstractController {
         }
     }
 
+    public static async addFriendToUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const friendId: string = req.params.friendId;
+        try {
+            await UserService.addFriend(userId, friendId);
+            res.send(201);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { addFriend: userId = ${userId}; friendId = ${friendId} } error`);
+        }
+    }
+
+    public static async removeFriendFromUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const friendId: string = req.params.friendId;
+        try {
+            await UserService.removeFriend(userId, friendId);
+            res.send(204);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { removeFriend: userId = ${userId}; friendId = ${friendId} } error`);
+        }
+    }
+
+    public static async getRelationOfUsersById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userAId: string = req.params.userAId;
+        const userBId: string = req.params.userBId;
+        try {
+            const relationResponse = await UserService.getRelation(userAId, userBId);
+            res.send(200, relationResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { addFriend: userAId = ${userAId}; userBId = ${userBId} } error`);
+        }
+    }
+
     public static async getGamesOfUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         const page: number = parseInt(req.query.page, 10) || 0;

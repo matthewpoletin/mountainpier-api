@@ -14,6 +14,9 @@ export default interface IUserService {
     deleteUserById(userId: string): Promise<void>;
 
     getFriends(userId: string, page?: number, size?: number): Promise<IUserSocialResponse[]>;
+    addFriend(userId: string, friendId: string): Promise<void>;
+    removeFriend(userId: string, friendId: string): Promise<void>;
+    getRelation(userAId: string, userBId: string): Promise<any>;
 
     getGames(userId: string, page: number, size: number): Promise<[string]>;
     addGameToUserById(userId: string, gameId: string): Promise<void>;
