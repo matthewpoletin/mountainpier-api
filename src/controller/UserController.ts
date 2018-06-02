@@ -22,6 +22,7 @@ import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenRespon
 import TwitchService from "../backend/twitch/TwitchService";
 import DeveloperService from "../backend/market/DeveloperService";
 import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
+import IDeveloperRequest from "../backend/market/interface/IDeveloperRequest";
 
 export default class UserController extends AbstractController {
 
@@ -292,6 +293,31 @@ export default class UserController extends AbstractController {
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { getServerOfUser: userId = ${userId} } error`);
+        }
+    }
+
+    public static async getDeveloper(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const developerResponse: IDeveloperResponse = await DeveloperService.getDeveloperBy({userId});
+            res.json(developerResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getDeveloper: userId = ${userId} } error`);
+        }
+    }
+
+    public static async createDeveloper(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        const developerRequest: IDeveloperRequest = req.body;
+        try {
+            const userResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            developerRequest.userId = userResponse.id;
+            const developerResponse: IDeveloperResponse = await DeveloperService.createDeveloper(developerRequest);
+            res.json(developerResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { createDeveloper: userId = ${userId} } error`);
         }
     }
 

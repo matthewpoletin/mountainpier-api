@@ -55,11 +55,12 @@ export default function Router(server: restify.Server) {
 
     server.get("/users/:userId/servers", UserController.getServerOfUserById);
 
+    server.get("/users/:userId/developer", UserController.getDeveloper);
+    server.post("/users/:userId/developer", UserController.createDeveloper);
+    server.get("/users/:userId/developer/games", UserController.getGamesOfDeveloper);
     server.get("/users/:userId/apps", UserController.getAppsOfUserById);
 
     server.post("/users/twitch", UserController.authUserByTwitch);
-
-    server.get("/users/:userId/developer/games", UserController.getGamesOfDeveloper);
 
     // GAMES
     server.get("/games", GameController.getGames);
