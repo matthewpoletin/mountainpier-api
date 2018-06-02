@@ -7,7 +7,7 @@ import AbstractController from "./AbstractController";
 import authService from "../backend/auth/AuthService";
 
 import IAppRequest from "../backend/auth/interface/AppRequest";
-import IAppResponse from "../backend/auth/interface/AppResponse";
+import IAppResponse, {IAppPaginated} from "../backend/auth/interface/AppResponse";
 import IGetTokenRequest from "../backend/auth/interface/GetTokenRequest";
 import IOAuthLoginRequest from "../backend/auth/interface/OAuthLoginRequest";
 import IOAuthLoginResponse from "../backend/auth/interface/OAuthLoginResponse";
@@ -17,6 +17,18 @@ import ITokenResponse from "../backend/auth/interface/TokenResponse";
 import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
 
 export default class OAuthController extends AbstractController {
+
+    public static async getApps(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const page: number = parseInt(req.query.page, 10) || 0;
+        const size: number = parseInt(req.query.size, 10) || 25;
+        try {
+            const appResponse: IAppPaginated = await authService.getApps(page, size);
+            res.json(appResponse);
+            return next();
+        } catch (error) {
+            OAuthController.errorResponse(error, res, next, `OAuthService { getApps } error`);
+        }
+    }
 
     public static async createApp(req: restify.Request, res: restify.Response, next: restify.Next) {
         const appRequest: IAppRequest = req.body;

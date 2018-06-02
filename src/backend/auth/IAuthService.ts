@@ -1,7 +1,7 @@
 "use strict";
 
 import IAppRequest from "./interface/AppRequest";
-import IAppResponse from "./interface/AppResponse";
+import IAppResponse, {IAppPaginated} from "./interface/AppResponse";
 import IGetTokenRequest from "./interface/GetTokenRequest";
 import ITwitchTokenAuthRequest from "./interface/ITwitchTokenAuthRequest";
 import ITwitchTokenAuthResponse from "./interface/ITwitchTokenAuthResponse";
@@ -33,6 +33,8 @@ export default interface IAuthService {
     refresh(refresh: IRefreshRequest): Promise<ITokenResponse>;
 
     logout(token: ITokenRequest): Promise<void>;
+
+    getApps(page: number, size: number): Promise<IAppPaginated>;
 
     createApp(appRequest: IAppRequest): Promise<IAppResponse>;
 

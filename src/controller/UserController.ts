@@ -5,24 +5,24 @@ import * as restify from "restify";
 import AbstractController from "./AbstractController";
 
 import AuthService from "../backend/auth/AuthService";
+import DeveloperService from "../backend/market/DeveloperService";
 import GameService from "../backend/market/GameService";
 import UserService from "../backend/social/UserService";
+import TwitchService from "../backend/twitch/TwitchService";
 
 import IAppResponse from "../backend/auth/interface/AppResponse";
 import ITwitchTokenAuthRequest from "../backend/auth/interface/ITwitchTokenAuthRequest";
 import IUserAuthRequest from "../backend/auth/interface/UserAuthRequest";
 import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
 import IUserRegRequest from "../backend/interface/IUserRegRequest";
+import IDeveloperRequest from "../backend/market/interface/IDeveloperRequest";
+import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
 import IGameResponse, {IGamePaginated} from "../backend/market/interface/IGameResponse";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
 import IUserSocialResponse from "../backend/social/interface/IUserSocialResponse";
 import IUserPaginated from "../backend/social/interface/IUserSocialResponse";
 import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
-import TwitchService from "../backend/twitch/TwitchService";
-import DeveloperService from "../backend/market/DeveloperService";
-import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
-import IDeveloperRequest from "../backend/market/interface/IDeveloperRequest";
 
 export default class UserController extends AbstractController {
 

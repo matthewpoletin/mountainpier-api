@@ -70,18 +70,23 @@ class AuthService implements IAuthService {
         return rp.delete(options);
     }
 
+    public async getApps(page: number, size: number) {
+        const options = getOptions(authServiceURL, `/apps`, {page, size}, null);
+        return rp.get(options);
+    }
+
     public createApp(appRequest: IAppRequest): Promise<IAppResponse> {
-        const options = getOptions(authServiceURL, `/app`, null, appRequest);
+        const options = getOptions(authServiceURL, `/apps`, null, appRequest);
         return rp.post(options);
     }
 
     public getApp(appId: number): Promise<IAppResponse> {
-        const options = getOptions(authServiceURL, `/app/${appId}`, null, null);
+        const options = getOptions(authServiceURL, `/apps/${appId}`, null, null);
         return rp.get(options);
     }
 
     public deleteApp(appId: number): Promise<void> {
-        const options = getOptions(authServiceURL, `/app/${appId}`, null, null);
+        const options = getOptions(authServiceURL, `/apps/${appId}`, null, null);
         return rp.delete(options);
     }
 
@@ -119,6 +124,7 @@ class AuthService implements IAuthService {
         const options = getOptions(authServiceURL, `/providers/twitch/users/${userId}`, null, tokenRequest);
         return rp.patch(options);
     }
+
 }
 
 export default new AuthService();

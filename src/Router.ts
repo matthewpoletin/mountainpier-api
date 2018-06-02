@@ -21,9 +21,10 @@ export default function Router(server: restify.Server) {
     server.post("/auth/refresh", AuthController.refresh);
     server.del("/auth/logout", AuthController.logout);
 
-    server.post("/auth/oauth/app", OAuthController.createApp);
-    server.get("/auth/oauth/app/:appId", OAuthController.getApp);
-    server.del("/auth/oauth/app/:appId", OAuthController.deleteApp);
+    server.get("/auth/oauth/apps", OAuthController.getApps);
+    server.post("/auth/oauth/apps", OAuthController.createApp);
+    server.get("/auth/oauth/apps/:appId", OAuthController.getApp);
+    server.del("/auth/oauth/apps/:appId", OAuthController.deleteApp);
 
     server.post("/auth/oauth/login", OAuthController.login);
     server.post("/auth/oauth/token", OAuthController.getToken);
