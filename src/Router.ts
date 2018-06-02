@@ -72,6 +72,7 @@ export default function Router(server: restify.Server) {
     server.del("/games/:gameId", GameController.deleteGameById);
 
     server.get("/games/:gameId/developers", GameController.getDevelopersOfGameById);
+    server.post("/games/:gameId/developers/:developerId", GameController.setDeveloperOfGame);
 
     server.get("/games/:gameId/users", GameController.getOwnersOfGameById);
 

@@ -8,6 +8,7 @@ import IGameService from "./IGameService";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
 import IGamePaginated from "./interface/IGameResponse";
+import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
@@ -45,6 +46,16 @@ class GameService implements IGameService {
     public async deleteGameById(gameId: string): Promise<void> {
         const options = getOptions(marketServiceURL, `/games/${gameId}`);
         return rp.delete(options);
+    }
+
+    public async getDevelopersOfGame(gameId: string, page?: number, size?: number): Promise<IDeveloperPaginated> {
+        const options = getOptions(marketServiceURL, `/games/${gameId}/developers`, {page, size});
+        return rp.post(options);
+    }
+
+    public async setDeveloperOfGame(gameId: string, developerId: number): Promise<IGameResponse> {
+        const options = getOptions(marketServiceURL, `/games/${gameId}/developers/${developerId}`);
+        return rp.post(options);
     }
 
     public async getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserPaginated> {

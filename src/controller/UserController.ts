@@ -76,6 +76,7 @@ export default class UserController extends AbstractController {
                 // If user doesn't exist create new one
                 // Create user in social service
                 const userSocialRequest: IUserSocialRequest = {
+                    avatar: twitchUserResponse.name,
                     regEmail: twitchUserResponse.email,
                     username: twitchUserResponse.name,
                 };

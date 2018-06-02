@@ -10,6 +10,7 @@ import IGameRequest from "../backend/market/interface/IGameRequest";
 import IGameResponse from "../backend/market/interface/IGameResponse";
 import IGamePaginated from "../backend/market/interface/IGameResponse";
 import {IUserPaginated} from "../backend/social/interface/IUserSocialResponse";
+import {IDeveloperPaginated} from "../backend/market/interface/IDeveloperResponse";
 
 export default class GameController extends AbstractController {
 
@@ -103,11 +104,23 @@ export default class GameController extends AbstractController {
         const page: number = parseInt(req.query.page, 10) || 0;
         const size: number = parseInt(req.query.size, 10) || 25;
         try {
-            const usersResponse: IUserPaginated = await GameService.getOwnersOfGameById(gameId, page, size);
-            res.send(usersResponse);
+            const developersResponse: IDeveloperPaginated = await GameService.getDevelopersOfGame(gameId, page, size);
+            res.send(developersResponse);
             return next();
         } catch (error) {
-            GameController.errorResponse(error, res, next, `GameService { getOwnersOfGame: gameId = ${gameId} } error`);
+            GameController.errorResponse(error, res, next, `GameService { getDevelopers: gameId = ${gameId} } error`);
+        }
+    }
+
+    public static async setDeveloperOfGame(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const gameId: string = req.params.gameId;
+        const developerId: number = parseInt(req.params.developerId, 10);
+        try {
+            const gameResponse: IGameResponse = await GameService.setDeveloperOfGame(gameId, developerId);
+            res.send(gameResponse);
+            return next();
+        } catch (error) {
+            GameController.errorResponse(error, res, next, `GameService { setDeveloper: gameId = ${gameId} } error`);
         }
     }
 
