@@ -22,7 +22,7 @@ class TwitchService implements ITwitchService {
             grant_type: "authorization_code",
             redirect_uri: redirectUri,
         };
-        const options = getOptions("https://id.twitch.tv/", `oauth2/token?code=${code}&client_id=m0ickj58eteefym2amg6smdrtu2sxx&client_secret=dauqixwqom9sdjafxg94qi4vvfcada&grant_type=authorization_code&redirect_uri=http://localhost:8080/oauth/twitch`, "");
+        const options = getOptions("https://id.twitch.tv", `/oauth2/token`, params);
         return rp.post(options);
     }
 

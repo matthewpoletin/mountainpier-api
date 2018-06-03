@@ -9,7 +9,7 @@ import GameService from "../backend/market/GameService";
 import IGameRequest from "../backend/market/interface/IGameRequest";
 import IGameResponse from "../backend/market/interface/IGameResponse";
 import IGamePaginated from "../backend/market/interface/IGameResponse";
-import {IUserPaginated} from "../backend/social/interface/IUserSocialResponse";
+import {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 import {IDeveloperPaginated} from "../backend/market/interface/IDeveloperResponse";
 
 export default class GameController extends AbstractController {
@@ -129,7 +129,7 @@ export default class GameController extends AbstractController {
         const page: number = parseInt(req.query.page, 10) || 0;
         const size: number = parseInt(req.query.size, 10) || 25;
         try {
-            const usersResponse: IUserPaginated = await GameService.getOwnersOfGameById(gameId, page, size);
+            const usersResponse: IUserSocialPaginated = await GameService.getOwnersOfGameById(gameId, page, size);
             res.send(usersResponse);
             return next();
         } catch (error) {

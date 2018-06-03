@@ -48,7 +48,19 @@ export default class OAuthController extends AbstractController {
             res.send(appResponse);
             return next();
         } catch (error) {
-            OAuthController.errorResponse(error, res, next, `OAuthService { getApp } error`);
+            OAuthController.errorResponse(error, res, next, `OAuthService { getApp: appId = ${appId} } error`);
+        }
+    }
+
+    public static async updateApp(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const appId: number = parseInt(req.params.appId, 10);
+        const appRequest: IAppRequest = req.body;
+        try {
+            const appResponse: IAppResponse = await authService.updateApp(appId, appRequest);
+            res.send(appResponse);
+            return next();
+        } catch (error) {
+            OAuthController.errorResponse(error, res, next, `OAuthService { updateApp: appId = ${appId} } error`);
         }
     }
 
@@ -59,7 +71,7 @@ export default class OAuthController extends AbstractController {
             res.send(204);
             return next();
         } catch (error) {
-            OAuthController.errorResponse(error, res, next, `OAuthController { deleteApp } error`);
+            OAuthController.errorResponse(error, res, next, `OAuthController { deleteApp: appId = ${appId} } error`);
         }
     }
 
@@ -117,4 +129,5 @@ export default class OAuthController extends AbstractController {
             OAuthController.errorResponse(error, res, next, `OAuthController { deleteToken } error`);
         }
     }
+
 }

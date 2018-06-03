@@ -40,6 +40,8 @@ export default interface IAuthService {
 
     getApp(appId: number): Promise<IAppResponse>;
 
+    updateApp(appId: number, appRequest: IAppRequest): Promise<IAppResponse>;
+
     deleteApp(appId: number): Promise<void>;
 
     OAuthLogin(oauthLoginRequest: IOAuthLoginRequest): Promise<IOAuthLoginResponse>;

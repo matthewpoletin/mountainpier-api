@@ -12,7 +12,7 @@ import IMatchRequest from "../backend/platform/interface/IMatchRequest";
 import IServerRequest from "../backend/platform/interface/IServerRequest";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IServerPaginated from "../backend/platform/interface/IServerResponse";
-import {IUserPaginated} from "../backend/social/interface/IUserSocialResponse";
+import {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 
 export default class ServerController extends AbstractController {
 
@@ -122,7 +122,7 @@ export default class ServerController extends AbstractController {
             usersIdResponse.content.forEach((userId) => {
                 userResponsePromises.push(UserService.getUserById(userId));
             });
-            const usersResponse: IUserPaginated = usersIdResponse;
+            const usersResponse: IUserSocialPaginated = usersIdResponse;
             usersResponse.content = await Promise.all(userResponsePromises);
             res.json(usersResponse);
             return next();

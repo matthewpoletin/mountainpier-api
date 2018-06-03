@@ -85,6 +85,11 @@ class AuthService implements IAuthService {
         return rp.get(options);
     }
 
+    public async updateApp(appId: number, appRequest: IAppRequest): Promise<IAppResponse> {
+        const options = getOptions(authServiceURL, `/apps/${appId}`, null, appRequest);
+        return rp.patch(options);
+    }
+
     public deleteApp(appId: number): Promise<void> {
         const options = getOptions(authServiceURL, `/apps/${appId}`, null, null);
         return rp.delete(options);

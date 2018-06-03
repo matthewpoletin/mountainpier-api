@@ -6,6 +6,7 @@ export default interface IAppResponse {
     id: number;
     secret: string;
     name: string;
+    redirectUri: string;
     userId: string;
 }
 

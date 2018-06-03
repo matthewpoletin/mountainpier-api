@@ -1,6 +1,6 @@
 "use strict";
 
-import {IUserPaginated} from "../social/interface/IUserSocialResponse";
+import {IUserSocialPaginated} from "../social/interface/IUserSocialResponse";
 import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
@@ -17,5 +17,5 @@ export default interface IGameService {
     getDevelopersOfGame(gameId: string, page?: number, size?: number): Promise<IDeveloperPaginated>;
     setDeveloperOfGame(gameId: string, developerId: number): Promise<IGameResponse>;
 
-    getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserPaginated>;
+    getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserSocialPaginated>;
 }

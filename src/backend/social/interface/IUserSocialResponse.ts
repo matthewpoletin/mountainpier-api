@@ -12,6 +12,6 @@ export default interface IUserSocialResponse {
     status?: string;
 }
 
-export interface IUserPaginated extends IPaginated {
+export interface IUserSocialPaginated extends IPaginated {
     content: IUserSocialResponse[];
 }

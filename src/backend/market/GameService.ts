@@ -3,7 +3,7 @@
 import config from "../../../IConfig";
 import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
-import {IUserPaginated} from "../social/interface/IUserSocialResponse";
+import {IUserSocialPaginated} from "../social/interface/IUserSocialResponse";
 import IGameService from "./IGameService";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
@@ -58,7 +58,7 @@ class GameService implements IGameService {
         return rp.post(options);
     }
 
-    public async getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserPaginated> {
+    public async getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserSocialPaginated> {
         const options = getOptions(socialServiceURL, `/games/${gameId}/users`);
         return rp.get(options);
     }

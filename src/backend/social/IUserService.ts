@@ -2,11 +2,10 @@
 
 import IServerResponse from "../platform/interface/IServerResponse";
 import IUserSocialRequest from "./interface/IUserSocialRequest";
-import IUserSocialResponse from "./interface/IUserSocialResponse";
-import IUserPaginated from "./interface/IUserSocialResponse";
+import IUserSocialResponse, {IUserSocialPaginated} from "./interface/IUserSocialResponse";
 
 export default interface IUserService {
-    getUsers(page?: number, size?: number, query?: string): Promise<IUserPaginated>;
+    getUsers(page?: number, size?: number, query?: string): Promise<IUserSocialPaginated>;
     createUser(userRequest: IUserSocialRequest): Promise<IUserSocialResponse>;
     getUserById(userId: string): Promise<IUserSocialResponse>;
     getUserBy(params): Promise<IUserSocialResponse>;

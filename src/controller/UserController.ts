@@ -1,5 +1,6 @@
 "use strict";
 
+import * as _ from "lodash";
 import * as restify from "restify";
 
 import AbstractController from "./AbstractController";
@@ -20,8 +21,7 @@ import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
 import IGameResponse, {IGamePaginated} from "../backend/market/interface/IGameResponse";
 import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
-import IUserSocialResponse from "../backend/social/interface/IUserSocialResponse";
-import IUserPaginated from "../backend/social/interface/IUserSocialResponse";
+import IUserSocialResponse, {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
 
 export default class UserController extends AbstractController {
@@ -31,13 +31,22 @@ export default class UserController extends AbstractController {
         const size: number = parseInt(req.query.size, 10) || 25;
         const username: string = req.query.username;
         try {
-            let userResponses: IUserPaginated = null;
+            let usersSocialResponse: IUserSocialPaginated = null;
             if (username) {
-                userResponses = await UserService.getUsers(page, size, username);
+                usersSocialResponse = await UserService.getUsers(page, size, username);
             } else {
-                userResponses = await UserService.getUsers(page, size);
+                usersSocialResponse = await UserService.getUsers(page, size);
             }
-            res.json(userResponses);
+            const userResponsePromises: Array<Promise<IUserAuthResponse>> = [];
+            usersSocialResponse.content.forEach((user) => {
+                userResponsePromises.push(AuthService.getUserById(user.id));
+            });
+            const usersResponse = usersSocialResponse;
+            const usersAuthResponse = await Promise.all(userResponsePromises);
+            usersResponse.content  = _.map(usersSocialResponse.content, (item) => {
+                return _.assign(item, _.find(usersAuthResponse, ["id", item.id]));
+            });
+            res.json(usersResponse);
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { getUsers } error`);
@@ -76,7 +85,7 @@ export default class UserController extends AbstractController {
                 // If user doesn't exist create new one
                 // Create user in social service
                 const userSocialRequest: IUserSocialRequest = {
-                    avatar: twitchUserResponse.name,
+                    avatar: twitchUserResponse.logo,
                     regEmail: twitchUserResponse.email,
                     username: twitchUserResponse.name,
                 };
@@ -123,7 +132,9 @@ export default class UserController extends AbstractController {
     public static async getUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
-            const userResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            const userSocialResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            const userAuthResponse: IUserAuthResponse = await AuthService.getUserById(userId);
+            const userResponse = {...userSocialResponse, ...userAuthResponse};
             res.json(userResponse);
             return next();
         } catch (error) {
@@ -136,7 +147,9 @@ export default class UserController extends AbstractController {
         const email: string = req.query.email;
         if (username) {
             try {
-                const userResponse = await UserService.getUserBy({username});
+                const userSocialResponse: IUserSocialResponse = await UserService.getUserBy({username});
+                const userAuthResponse: IUserAuthResponse = await AuthService.getUserById(userSocialResponse.id);
+                const userResponse = {...userSocialResponse, ...userAuthResponse};
                 res.json(userResponse);
                 return next();
             } catch (error) {
@@ -144,7 +157,9 @@ export default class UserController extends AbstractController {
             }
         } else {
             try {
-                const userResponse = await UserService.getUserBy({email});
+                const userSocialResponse = await UserService.getUserBy({email});
+                const userAuthResponse: IUserAuthResponse = await AuthService.getUserById(userSocialResponse.id);
+                const userResponse = {...userSocialResponse, ...userAuthResponse};
                 res.json(userResponse);
                 return next();
             } catch (error) {
@@ -166,7 +181,7 @@ export default class UserController extends AbstractController {
 
     public static async updateUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
-        const userRequest = req.body;
+        const userRequest: IUserRegRequest = req.body;
         try {
             const userResponse: IUserSocialResponse = await UserService.updateUserById(userId, userRequest);
             res.json(userResponse);

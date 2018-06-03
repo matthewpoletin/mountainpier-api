@@ -5,8 +5,7 @@ import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
 import IServerResponse from "../platform/interface/IServerResponse";
 import IUserSocialRequest from "./interface/IUserSocialRequest";
-import IUserSocialResponse from "./interface/IUserSocialResponse";
-import IUserPaginated from "./interface/IUserSocialResponse";
+import IUserSocialResponse, {IUserSocialPaginated} from "./interface/IUserSocialResponse";
 import IUserService from "./IUserService";
 
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
@@ -17,7 +16,7 @@ const platformServiceURL = config[mode].services.platform;
 
 class UserService implements IUserService {
 
-    public async getUsers(page?: number, size?: number, username?): Promise<IUserPaginated> {
+    public async getUsers(page?: number, size?: number, username?): Promise<IUserSocialPaginated> {
         const options = getOptions(socialServiceURL, `/users`, {page, size, username});
         return rp.get(options);
     }
