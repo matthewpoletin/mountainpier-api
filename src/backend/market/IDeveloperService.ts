@@ -1,8 +1,7 @@
 "use strict";
 
 import IDeveloperRequest from "./interface/IDeveloperRequest";
-import IDeveloperResponse from "./interface/IDeveloperResponse";
-import IDeveloperPaginated from "./interface/IDeveloperResponse";
+import IDeveloperResponse, {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 import {IGamePaginated} from "./interface/IGameResponse";
 
 export default interface IDeveloperService {

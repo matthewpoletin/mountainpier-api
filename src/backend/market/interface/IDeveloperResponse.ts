@@ -9,6 +9,7 @@ export default interface IDeveloperResponse {
     description?: string;
     website?: string;
     avatar?: string;
+    user?: object;
 }
 
 export interface IDeveloperPaginated extends IPaginated {

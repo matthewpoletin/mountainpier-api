@@ -25,6 +25,7 @@ import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
 import IUserSocialResponse, {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
+import ChartService from "../backend/chart/ChartService";
 
 export default class UserController extends AbstractController {
 
@@ -185,7 +186,14 @@ export default class UserController extends AbstractController {
         const userId: string = req.params.userId;
         const userRequest: IUserRegRequest = req.body;
         try {
-            const userResponse: IUserSocialResponse = await UserService.updateUserById(userId, userRequest);
+            const userSocialResponse: IUserSocialResponse = await UserService.updateUserById(userId, userRequest);
+            const userAuthRequest: IUserAuthRequest = {
+                id: userSocialResponse.id,
+                role: userRequest.role,
+                username: userSocialResponse.username,
+            };
+            const userAuthResponse: IUserAuthResponse = await AuthService.updateUserById(userId, userAuthRequest);
+            const userResponse = {...userSocialResponse, ...userAuthResponse};
             res.json(userResponse);
             return next();
         } catch (error) {
@@ -208,9 +216,9 @@ export default class UserController extends AbstractController {
     public static async deleteUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
-            // TODO: check if succeeds
             await UserService.deleteUserById(userId);
             await AuthService.deleteUser(userId);
+            await ChartService.deleteUser(userId);
             res.send(204);
             return next();
         } catch (error) {
@@ -329,9 +337,16 @@ export default class UserController extends AbstractController {
         const userId: string = req.params.userId;
         const developerRequest: IDeveloperRequest = req.body;
         try {
-            const userResponse: IUserSocialResponse = await UserService.getUserById(userId);
-            developerRequest.userId = userResponse.id;
+            const userSocialResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            developerRequest.userId = userSocialResponse.id;
             const developerResponse: IDeveloperResponse = await DeveloperService.createDeveloper(developerRequest);
+            const authRequest: IUserAuthRequest = {
+                id: userSocialResponse.id,
+                role: "DEVELOPER",
+                username: userSocialResponse.username,
+            };
+            const userAuthResponse = await AuthService.updateUserById(userSocialResponse.id, authRequest);
+            developerResponse.user = {...userSocialResponse, userAuthResponse};
             res.json(developerResponse);
             return next();
         } catch (error) {

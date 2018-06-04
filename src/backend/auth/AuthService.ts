@@ -35,6 +35,11 @@ class AuthService implements IAuthService {
         return rp.get(options);
     }
 
+    public async updateUserById(userId: string, userRequest: IUserAuthRequest): Promise<IUserAuthResponse> {
+        const options = getOptions(authServiceURL, `/users/${userId}`, null, userRequest);
+        return rp.patch(options);
+    }
+
     public async updateUserCredentials(userId: string, credentialsRequest): Promise<IUserAuthResponse> {
         const options = getOptions(authServiceURL, `/users/${userId}/credentials`, null, credentialsRequest);
         return rp.patch(options);

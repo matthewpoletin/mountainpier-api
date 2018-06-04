@@ -17,11 +17,9 @@ import IUserAuthResponse from "./interface/UserAuthResponse";
 export default interface IAuthService {
 
     createUser(user: IUserAuthRequest): Promise<IUserAuthResponse>;
-
     getUserById(userId: string): Promise<IUserAuthResponse>;
-
+    updateUserById(userId: string, userRequest: IUserAuthRequest): Promise<IUserAuthResponse>;
     updateUserCredentials(userId: string, credentialsRequest): Promise<IUserAuthResponse>;
-
     deleteUser(userId: string): Promise<void>;
 
     getAppsOfUser(userId: string): Promise<IAppResponse[]>;

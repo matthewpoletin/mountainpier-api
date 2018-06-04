@@ -5,20 +5,18 @@ import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
 import IDeveloperService from "./IDeveloperService";
 import IDeveloperRequest from "./interface/IDeveloperRequest";
-import IDeveloperResponse from "./interface/IDeveloperResponse";
-import IDeveloperPaginated from "./interface/IDeveloperResponse";
+import IDeveloperResponse, {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 import {IGamePaginated} from "./interface/IGameResponse";
 
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 
 const mode = process.env.NODE_ENV || "development";
-const socialServiceURL  = config[mode].services.social;
 const marketServiceURL  = config[mode].services.market;
 
 class DeveloperService implements IDeveloperService {
 
     public async getDevelopers(page?: number, size?: number, developername?): Promise<IDeveloperPaginated> {
-        const options = getOptions(marketServiceURL, `/developers`, {page, size, developername});
+        const options = getOptions(marketServiceURL, `/developers`, {page, size, name: developername});
         return rp.get(options);
     }
 
