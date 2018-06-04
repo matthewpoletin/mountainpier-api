@@ -7,6 +7,7 @@ interface IConfig {
             social: string,
             market: string,
             platform: string,
+            chart: string,
         };
         twitch: {
             clientId: string,
@@ -20,6 +21,7 @@ interface IConfig {
             social: string,
             market: string,
             platform: string,
+            chart: string,
         };
         twitch: {
             clientId: string,

@@ -6,14 +6,14 @@ import AbstractController from "./AbstractController";
 
 import authService from "../backend/auth/AuthService";
 
-import ILoginRequest from "../backend/auth/interface/LoginRequest";
+import ILoginAuthRequest from "../backend/auth/interface/LoginAuthRequest";
 import IRefreshRequest from "../backend/auth/interface/RefreshRequest";
 import ITokenRequest from "../backend/auth/interface/TokenRequest";
 
 export default class AuthController extends AbstractController {
 
     public static async login(req: restify.Request, res: restify.Response, next: restify.Next) {
-        const loginRequest: ILoginRequest = req.body;
+        const loginRequest: ILoginAuthRequest = req.body;
         try {
             const authResponse = await authService.login(loginRequest);
             return res.json(201, authResponse);

@@ -5,10 +5,10 @@ import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
 import {IUserSocialPaginated} from "../social/interface/IUserSocialResponse";
 import IGameService from "./IGameService";
+import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 import IGameRequest from "./interface/IGameRequest";
 import IGameResponse from "./interface/IGameResponse";
 import IGamePaginated from "./interface/IGameResponse";
-import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 
 const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoWv9HHYoIFMuZUZ"});
 

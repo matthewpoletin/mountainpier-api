@@ -9,7 +9,7 @@ import IAppResponse from "./interface/AppResponse";
 import IGetTokenRequest from "./interface/GetTokenRequest";
 import ITwitchTokenAuthRequest from "./interface/ITwitchTokenAuthRequest";
 import ITwitchTokenAuthResponse from "./interface/ITwitchTokenAuthResponse";
-import ILoginRequest from "./interface/LoginRequest";
+import ILoginAuthRequest from "./interface/LoginAuthRequest";
 import IOAuthLoginRequest from "./interface/OAuthLoginRequest";
 import IOAuthLoginResponse from "./interface/OAuthLoginResponse";
 import IRefreshRequest from "./interface/RefreshRequest";
@@ -50,7 +50,7 @@ class AuthService implements IAuthService {
         return rp.get(options);
     }
 
-    public login(credentials: ILoginRequest): Promise<ITokenResponse> {
+    public login(credentials: ILoginAuthRequest): Promise<ITokenResponse> {
         const options = getOptions(authServiceURL, `/token`, null, credentials);
         return rp.post(options);
     }

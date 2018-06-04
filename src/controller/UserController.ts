@@ -6,6 +6,7 @@ import * as restify from "restify";
 import AbstractController from "./AbstractController";
 
 import AuthService from "../backend/auth/AuthService";
+import LoginService from "../backend/chart/LoginService";
 import DeveloperService from "../backend/market/DeveloperService";
 import GameService from "../backend/market/GameService";
 import UserService from "../backend/social/UserService";
@@ -15,6 +16,7 @@ import IAppResponse from "../backend/auth/interface/AppResponse";
 import ITwitchTokenAuthRequest from "../backend/auth/interface/ITwitchTokenAuthRequest";
 import IUserAuthRequest from "../backend/auth/interface/UserAuthRequest";
 import IUserAuthResponse from "../backend/auth/interface/UserAuthResponse";
+import ILoginResponse, {ILoginPaginated} from "../backend/chart/interface/LoginResponse";
 import IUserRegRequest from "../backend/interface/IUserRegRequest";
 import IDeveloperRequest from "../backend/market/interface/IDeveloperRequest";
 import IDeveloperResponse from "../backend/market/interface/IDeveloperResponse";
@@ -357,6 +359,28 @@ export default class UserController extends AbstractController {
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { getGamesOfDeveloper: userId = ${userId} } error`);
+        }
+    }
+
+    public static async getLogins(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const loginResponse: ILoginPaginated = await LoginService.getLoginsOfUser(userId);
+            res.json(loginResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getLogins: userId = ${userId} } error`);
+        }
+    }
+
+    public static async getLatestLogin(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const userId: string = req.params.userId;
+        try {
+            const loginResponse: ILoginResponse = await LoginService.getLatestLoginOfUser(userId);
+            res.json(loginResponse);
+            return next();
+        } catch (error) {
+            UserController.errorResponse(error, res, next, `UserService { getLatestLogin: userId = ${userId} } error`);
         }
     }
 

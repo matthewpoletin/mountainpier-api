@@ -6,6 +6,7 @@ import AuthController from "./controller/AuthController";
 import ChannelController from "./controller/ChannelController";
 import DeveloperController from "./controller/DeveloperController";
 import GameController from "./controller/GameController";
+import LoginController from "./controller/LoginController";
 import OAuthController from "./controller/OAuthController";
 import ProviderController from "./controller/ProviderController";
 import ServerController from "./controller/ServerController";
@@ -62,6 +63,9 @@ export default function Router(server: restify.Server) {
     server.get("/users/:userId/developer/games", UserController.getGamesOfDeveloper);
     server.get("/users/:userId/apps", UserController.getAppsOfUserById);
 
+    server.get("/users/:userId/logins", UserController.getLogins);
+    server.get("/users/:userId/logins/latest", UserController.getLatestLogin);
+
     server.post("/users/twitch", UserController.authUserByTwitch);
 
     // GAMES
@@ -108,5 +112,9 @@ export default function Router(server: restify.Server) {
     server.get("/servers/:serverId/users", ServerController.getUsersOfServerById);
     server.post("/servers/:serverId/users/:userId", ServerController.addUsersToServerById);
     server.del("/servers/:serverId/users/:userId", ServerController.removeUsersFromServerById);
+
+    // LOGINS
+    server.get("/logins", LoginController.getLogins);
+    server.post("/logins", LoginController.createLogin);
 
 }

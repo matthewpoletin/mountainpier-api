@@ -4,7 +4,8 @@
 			"auth": "http://localhost:8550/api/auth",
 			"social": "http://localhost:8551/api/social",
 			"market": "http://localhost:8552/api/market",
-			"platform": "http://localhost:8553/api/platform"
+			"platform": "http://localhost:8553/api/platform",
+			"chart": "http://localhost:8554/api/chart"
 		},
 		"twitch": {
 			"clientId": "m0ickj58eteefym2amg6smdrtu2sxx",
@@ -17,12 +18,13 @@
 			"auth": "http://auth.mountainpier.ru/api/auth",
 			"social": "http://social.mountainpier.ru/api/social",
 			"market": "http://market.mountainpier.ru/api/market",
-			"platform": "http://platform.mountanpier.ru/api/platform"
+			"platform": "http://platform.mountanpier.ru/api/platform",
+			"chart": "http://chart.mountanpier.ru/api/chart"
 		},
 		"twitch": {
 			"clientId": "gmorlpxdgnavsssk2gudj355nfx2o6",
 			"clientSecret": "ic50mmqzg8syju1vrfeohotwi1pgex",
-			"redirectUri": "https://mountainpier.ru/oauth/twitch"
+			"redirectUri": "http://mountainpier.ru/oauth/twitch"
 		}
 	},
 	"NoAuthCheckUrl": [
