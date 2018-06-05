@@ -81,6 +81,8 @@ export default function Router(server: restify.Server) {
 
     server.get("/games/:gameId/users", GameController.getOwnersOfGameById);
 
+    server.get("/games/:gameId/servers", GameController.getServersOfGameById);
+
     // DEVELOPERS
     server.get("/developers", DeveloperController.getDevelopers);
     server.post("/developers", DeveloperController.createDeveloper);

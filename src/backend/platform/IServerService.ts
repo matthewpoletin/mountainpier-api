@@ -4,8 +4,7 @@ import IChannelResponse from "./interface/IChannelResponse";
 import IMatchRequest from "./interface/IMatchRequest";
 import IMatchResponse from "./interface/IMatchResponse";
 import IServerRequest from "./interface/IServerRequest";
-import IServerResponse from "./interface/IServerResponse";
-import IServerPaginated from "./interface/IServerResponse";
+import IServerResponse, {IServerPaginated} from "./interface/IServerResponse";
 
 export default interface IServerService {
     getServers(page?: number, size?: number, query?: string): Promise<IServerPaginated>;

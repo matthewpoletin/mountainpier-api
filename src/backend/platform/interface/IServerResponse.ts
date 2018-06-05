@@ -4,9 +4,10 @@ import IPaginated from "../../IPaginated";
 
 export default interface IServerResponse {
     id: number;
-    gameId: number;
+    gameId: string;
     channelId: number;
     name?: string;
+    game?: object;
 }
 
 export interface IServerPaginated extends IPaginated {

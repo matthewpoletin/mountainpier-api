@@ -1,17 +1,19 @@
 "use strict";
 
+import * as _ from "lodash";
 import * as restify from "restify";
 
 import AbstractController from "./AbstractController";
 
+import GameService from "../backend/market/GameService";
 import ServerService from "../backend/platform/ServerService";
 import UserService from "../backend/social/UserService";
 
+import IGameResponse from "../backend/market/interface/IGameResponse";
 import IChannelResponse from "../backend/platform/interface/IChannelResponse";
 import IMatchRequest from "../backend/platform/interface/IMatchRequest";
 import IServerRequest from "../backend/platform/interface/IServerRequest";
-import IServerResponse from "../backend/platform/interface/IServerResponse";
-import IServerPaginated from "../backend/platform/interface/IServerResponse";
+import IServerResponse, {IServerPaginated} from "../backend/platform/interface/IServerResponse";
 import {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 
 export default class ServerController extends AbstractController {
@@ -26,6 +28,22 @@ export default class ServerController extends AbstractController {
                 serverResponses = await ServerService.getServers(page, size, name);
             } else {
                 serverResponses = await ServerService.getServers(page, size);
+            }
+            try {
+                const gameResponsePromises: Array<Promise<IGameResponse>> = [];
+                serverResponses.content.forEach((server: IServerResponse) => {
+                    if (server.gameId) { gameResponsePromises.push(GameService.getGameById(server.gameId)); }
+                });
+                // TODO: Allow not existing game with id
+                const gamesResponse = await Promise.all(gameResponsePromises);
+                serverResponses.content = _.map(serverResponses.content, (server: IServerResponse) => {
+                    server.game = _.find(gamesResponse, ["id", server.gameId]);
+                    delete server.gameId;
+                    return server;
+                });
+            } catch (error) {
+                // TODO: Handle error properly
+                ServerController.errorResponse(error, res, next, `ServerService { getServers } error`);
             }
             res.json(serverResponses);
             return next();
@@ -49,6 +67,12 @@ export default class ServerController extends AbstractController {
         const serverId: number = parseInt(req.params.serverId, 10);
         try {
             const serverResponse: IServerResponse = await ServerService.getServerById(serverId);
+            try {
+                serverResponse.game = await GameService.getGameById(serverResponse.gameId);
+                delete serverResponse.gameId;
+            } catch (error) {
+                ServerController.errorResponse(error, res, next, `ServerService { getServer: serverId = ${serverId}} error`);
+            }
             res.json(serverResponse);
             return next();
         } catch (error) {
@@ -57,15 +81,15 @@ export default class ServerController extends AbstractController {
     }
 
     public static async getServerBy(req: restify.Request, res: restify.Response, next: restify.Next) {
-        const servername: string = req.query.servername;
+        const serverName: string = req.query.serverName;
         const email: string = req.query.email;
-        if (servername) {
+        if (serverName) {
             try {
-                const serverResponse = await ServerService.getServerBy({servername});
+                const serverResponse = await ServerService.getServerBy({name: serverName});
                 res.json(serverResponse);
                 return next();
             } catch (error) {
-                ServerController.errorResponse(error, res, next, `ServerService { getServerBy: servername = ${servername}} error`);
+                ServerController.errorResponse(error, res, next, `ServerService { getServerBy: serverName = ${serverName}} error`);
             }
         } else {
             try {
@@ -80,9 +104,19 @@ export default class ServerController extends AbstractController {
 
     public static async updateServerById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const serverId: number = parseInt(req.params.serverId, 10);
-        const serverRequest = req.body;
+        const serverRequest: IServerRequest = req.body;
         try {
-            const serverResponse: IServerResponse = await ServerService.updateServerById(serverId, serverRequest);
+            let serverResponse: IServerResponse = null;
+            let gameResponse: IGameResponse = null;
+            if (serverRequest.gameId !== undefined) {
+                gameResponse = await GameService.getGameById(serverRequest.gameId);
+            }
+            serverResponse = await ServerService.updateServerById(serverId, serverRequest);
+            if (serverRequest.gameId !== undefined) {
+                gameResponse = await GameService.getGameById(serverResponse.gameId);
+                delete serverResponse.gameId;
+            }
+            serverResponse.game = gameResponse;
             res.json(serverResponse);
             return next();
         } catch (error) {

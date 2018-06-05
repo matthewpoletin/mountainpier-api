@@ -3,6 +3,7 @@
 import config from "../../../IConfig";
 import getOptions from "../../Options";
 import requestWrapper from "../authrequest";
+import {IServerPaginated} from "../platform/interface/IServerResponse";
 import {IUserSocialPaginated} from "../social/interface/IUserSocialResponse";
 import IGameService from "./IGameService";
 import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
@@ -15,6 +16,7 @@ const rp = requestWrapper({id: 3, secret: "qULETS2mSjRKMgNppMSutTPb4xb1IzqxmbNoW
 const mode = process.env.NODE_ENV || "development";
 const socialServiceURL = config[mode].services.social;
 const marketServiceURL = config[mode].services.market;
+const platformServiceURL = config[mode].services.platform;
 
 class GameService implements IGameService {
 
@@ -60,6 +62,11 @@ class GameService implements IGameService {
 
     public async getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserSocialPaginated> {
         const options = getOptions(socialServiceURL, `/games/${gameId}/users`);
+        return rp.get(options);
+    }
+
+    public async getServersOfGame(gameId: number): Promise<IServerPaginated> {
+        const options = getOptions(platformServiceURL, `/games/${gameId}/servers`);
         return rp.get(options);
     }
 

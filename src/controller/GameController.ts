@@ -11,6 +11,7 @@ import IGameResponse from "../backend/market/interface/IGameResponse";
 import IGamePaginated from "../backend/market/interface/IGameResponse";
 import {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 import {IDeveloperPaginated} from "../backend/market/interface/IDeveloperResponse";
+import {IServerPaginated} from "../backend/platform/interface/IServerResponse";
 
 export default class GameController extends AbstractController {
 
@@ -134,6 +135,18 @@ export default class GameController extends AbstractController {
             return next();
         } catch (error) {
             GameController.errorResponse(error, res, next, `GameService { getOwnersOfGame: gameId = ${gameId} } error`);
+        }
+    }
+
+    public static async getServersOfGameById(req: restify.Request, res: restify.Response, next: restify.Next) {
+        const gameId: string = req.params.gameId;
+        try {
+            const gameResponse: IGameResponse = await GameService.getGameById(gameId);
+            const serversResponse: IServerPaginated = await GameService.getServersOfGame(gameResponse.id);
+            res.send(serversResponse);
+            return next();
+        } catch (error) {
+            GameController.errorResponse(error, res, next, `GameService { getServers: gameId = ${gameId} } error`);
         }
     }
 

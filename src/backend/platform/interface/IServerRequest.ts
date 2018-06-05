@@ -1,7 +1,7 @@
 "use strict";
 
 export default interface IServerRequest {
-    gameId: number;
+    gameId: string;
     channelId: number;
     name?: string;
 }

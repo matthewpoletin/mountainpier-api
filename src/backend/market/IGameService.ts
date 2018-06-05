@@ -1,5 +1,6 @@
 "use strict";
 
+import {IServerPaginated} from "../platform/interface/IServerResponse";
 import {IUserSocialPaginated} from "../social/interface/IUserSocialResponse";
 import {IDeveloperPaginated} from "./interface/IDeveloperResponse";
 import IGameRequest from "./interface/IGameRequest";
@@ -18,4 +19,6 @@ export default interface IGameService {
     setDeveloperOfGame(gameId: string, developerId: number): Promise<IGameResponse>;
 
     getOwnersOfGameById(gameId: string, page?: number, size?: number): Promise<IUserSocialPaginated>;
+
+    getServersOfGame(gameId: number): Promise<IServerPaginated>;
 }
