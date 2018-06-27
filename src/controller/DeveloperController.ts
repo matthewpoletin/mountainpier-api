@@ -38,7 +38,7 @@ export default class DeveloperController extends AbstractController {
                     return item;
                 });
             } catch (error) {
-                DeveloperController.errorResponse(error, res, next, `DeveloperService { getDevelopers } error`);
+                // DeveloperController.errorResponse(error, res, next, `DeveloperService { getDevelopers } error`);
             }
             res.json(developerResponses);
             return next();
@@ -69,7 +69,7 @@ export default class DeveloperController extends AbstractController {
                 developerResponse.user = await UserService.getUserById(developerResponse.userId);
                 delete developerResponse.userId;
             } catch (error) {
-                DeveloperController.errorResponse(error, res, next, `DeveloperService { getDeveloper: developerId = ${developerId}} error`);
+                // DeveloperController.errorResponse(error, res, next, `DeveloperService { getDeveloper: developerId = ${developerId}} error`);
             }
             res.json(developerResponse);
             return next();

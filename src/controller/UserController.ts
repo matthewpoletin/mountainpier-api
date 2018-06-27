@@ -6,6 +6,7 @@ import * as restify from "restify";
 import AbstractController from "./AbstractController";
 
 import AuthService from "../backend/auth/AuthService";
+import ChartService from "../backend/chart/ChartService";
 import LoginService from "../backend/chart/LoginService";
 import DeveloperService from "../backend/market/DeveloperService";
 import GameService from "../backend/market/GameService";
@@ -25,7 +26,6 @@ import IServerResponse from "../backend/platform/interface/IServerResponse";
 import IUserSocialRequest from "../backend/social/interface/IUserSocialRequest";
 import IUserSocialResponse, {IUserSocialPaginated} from "../backend/social/interface/IUserSocialResponse";
 import ITwitchTokenResponse from "../backend/twitch/interface/ITwitchTokenResponse";
-import ChartService from "../backend/chart/ChartService";
 
 export default class UserController extends AbstractController {
 
@@ -34,16 +34,19 @@ export default class UserController extends AbstractController {
         const size: number = parseInt(req.query.size, 10) || 25;
         const username: string = req.query.username;
         try {
+            // Get user from social service
             let usersSocialResponse: IUserSocialPaginated = null;
             if (username) {
                 usersSocialResponse = await UserService.getUsers(page, size, username);
             } else {
                 usersSocialResponse = await UserService.getUsers(page, size);
             }
+            // Get users from auth service
             const userResponsePromises: Array<Promise<IUserAuthResponse>> = [];
             usersSocialResponse.content.forEach((user) => {
                 userResponsePromises.push(AuthService.getUserById(user.id));
             });
+            // Combine responses
             const usersResponse = usersSocialResponse;
             const usersAuthResponse = await Promise.all(userResponsePromises);
             usersResponse.content  = _.map(usersSocialResponse.content, (item) => {
@@ -59,15 +62,14 @@ export default class UserController extends AbstractController {
     public static async createUser(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userRequest: IUserRegRequest = req.body;
         try {
-            const userSocialResponse: IUserSocialResponse = await UserService.createUser(userRequest);
-            if (typeof userRequest.role === "undefined") { userRequest.role = "USER"; }
-            const userAuthRequest: IUserAuthRequest = {
-                id: userSocialResponse.id,
-                password: userRequest.password,
-                role: userRequest.role,
-                username: userSocialResponse.username,
-            };
-            const userAuthResponse: IUserAuthResponse = await AuthService.createUser(userAuthRequest);
+            // Set regDate to now if not set
+            if (userRequest.regDate === undefined) { userRequest.regDate = Date.now().valueOf(); }
+            // Set role to USER if not set
+            if (userRequest.role === undefined) { userRequest.role = "USER"; }
+            // Create user in social service
+            const userSocialResponse: IUserSocialResponse = await UserService.createUser(userRequest as IUserSocialRequest);
+            // Create user in auth service
+            const userAuthResponse: IUserAuthResponse = await AuthService.createUser(userRequest as IUserAuthRequest);
             res.json(201, {...userSocialResponse, ...userAuthResponse});
             return next();
         } catch (error) {
@@ -135,10 +137,12 @@ export default class UserController extends AbstractController {
     public static async getUserById(req: restify.Request, res: restify.Response, next: restify.Next) {
         const userId: string = req.params.userId;
         try {
+            // Get user from social service
             const userSocialResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            // Get user from auth service
             const userAuthResponse: IUserAuthResponse = await AuthService.getUserById(userId);
-            const userResponse = {...userSocialResponse, ...userAuthResponse};
-            res.json(userResponse);
+            // Send both responses
+            res.json({...userSocialResponse, ...userAuthResponse});
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { getUser: userId = ${userId}} error`);
@@ -186,15 +190,16 @@ export default class UserController extends AbstractController {
         const userId: string = req.params.userId;
         const userRequest: IUserRegRequest = req.body;
         try {
+            // Update user on social service
             const userSocialResponse: IUserSocialResponse = await UserService.updateUserById(userId, userRequest);
+            // Update user on auth service
             const userAuthRequest: IUserAuthRequest = {
                 id: userSocialResponse.id,
                 role: userRequest.role,
                 username: userSocialResponse.username,
             };
             const userAuthResponse: IUserAuthResponse = await AuthService.updateUserById(userId, userAuthRequest);
-            const userResponse = {...userSocialResponse, ...userAuthResponse};
-            res.json(userResponse);
+            res.json({...userSocialResponse, ...userAuthResponse});
             return next();
         } catch (error) {
             UserController.errorResponse(error, res, next, `UserService { updateUser: userId = ${userId} } error`);
@@ -337,15 +342,19 @@ export default class UserController extends AbstractController {
         const userId: string = req.params.userId;
         const developerRequest: IDeveloperRequest = req.body;
         try {
+            // Get user by id to check existence
             const userSocialResponse: IUserSocialResponse = await UserService.getUserById(userId);
+            // Create developer on market service
             developerRequest.userId = userSocialResponse.id;
             const developerResponse: IDeveloperResponse = await DeveloperService.createDeveloper(developerRequest);
+            // Change user's role to DEVELOPER on auth service
             const authRequest: IUserAuthRequest = {
                 id: userSocialResponse.id,
                 role: "DEVELOPER",
                 username: userSocialResponse.username,
             };
             const userAuthResponse = await AuthService.updateUserById(userSocialResponse.id, authRequest);
+            // Add user info to developer response
             developerResponse.user = {...userSocialResponse, userAuthResponse};
             res.json(developerResponse);
             return next();

@@ -6,7 +6,7 @@ export default interface IUserRegRequest {
     role?: string;
     avatar?: string;
     regEmail?: string;
-    regDate?: string;
-    birthDate?: string;
+    regDate?: number;
+    birthDate?: number;
     status?: string;
 }

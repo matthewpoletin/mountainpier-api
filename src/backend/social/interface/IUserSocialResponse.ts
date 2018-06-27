@@ -7,8 +7,8 @@ export default interface IUserSocialResponse {
     username?: string;
     avatar?: string;
     regEmail?: string;
-    regDate?: string;
-    birthDate?: string;
+    regDate?: number;
+    birthDate?: number;
     status?: string;
 }
 
